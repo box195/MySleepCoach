@@ -1,0 +1,68 @@
+name: Daily Sleep Briefing
+
+on:
+  schedule:
+    # 아침 브리핑: 매일 한국 시간 오전 7시 5분 (UTC 22:05)
+    - cron: '5 22 * * *'
+    # 저녁 브리핑: 매일 한국 시간 오후 9시 00분 (UTC 12:00)
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: '브리핑 모드 (morning 또는 evening)'
+        required: true
+        default: 'morning'
+
+jobs:
+  briefing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 저장소 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Python 설정
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 필수 라이브러리 설치
+        run: |
+          pip install requests
+
+      - name: 설정 파일 생성
+        run: |
+          cat << 'EOF' > config.json
+          {
+            "google": {
+              "client_id": "${{ secrets.GOOGLE_CLIENT_ID }}",
+              "client_secret": "${{ secrets.GOOGLE_CLIENT_SECRET }}",
+              "refresh_token": "${{ secrets.GOOGLE_REFRESH_TOKEN }}",
+              "access_token": ""
+            },
+            "kakao": {
+              "rest_api_key": "${{ secrets.KAKAO_REST_API_KEY }}",
+              "refresh_token": "${{ secrets.KAKAO_REFRESH_TOKEN }}",
+              "access_token": ""
+            },
+            "gemini": {
+              "api_key": "${{ secrets.GEMINI_API_KEY }}",
+              "model": "models/gemini-3.6-flash"
+            },
+            "settings": {
+              "target_sleep_hours": 8.0
+            }
+          }
+          EOF
+
+      - name: 브리핑 실행 및 카카오톡 전송
+        run: |
+          HOUR=$(date -u +%H)
+          if [ "$HOUR" -ge 10 ] && [ "$HOUR" -le 16 ]; then
+            MODE="evening"
+          else
+            MODE="morning"
+          fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            MODE="${{ github.event.inputs.mode }}"
+          fi
+          python sleep_coach.py "$MODE"
