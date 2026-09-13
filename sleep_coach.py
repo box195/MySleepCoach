@@ -344,8 +344,8 @@ def calculate_advanced_metrics(sleep_points, step_points, target_hours=8.0):
         }
     }
 
-def generate_ai_briefing(metrics_pkg, gemini_key, model="models/gemini-3.6-flash", mode="morning"):
-    """Gemini 3.6 Flash로 초압축 컴팩트 카톡 브리핑 멘트 생성"""
+def generate_ai_briefing(metrics_pkg, gemini_key, model="models/gemini-3.8-flash", mode="morning"):
+    """Gemini 3.8 Flash로 초압축 컴팩트 카톡 브리핑 멘트 생성"""
     today = metrics_pkg["today"]
     activity = metrics_pkg["activity"]
 
@@ -467,9 +467,9 @@ def run(mode="morning"):
     print(f"- 신체 컨디션 점수: {today['condition_score']}점")
     print(f"- 일일 부하(Day Strain): {metrics_pkg['activity']['strain_score']} / 21")
 
-    print("\n4. Gemini 3.6 Flash 코칭 생성 중...")
+    print("\n4. Gemini 3.8 Flash 코칭 생성 중...")
     gemini_key = cfg["gemini"]["api_key"]
-    model = cfg["gemini"].get("model", "models/gemini-3.6-flash")
+    model = cfg["gemini"].get("model", "models/gemini-3.8-flash")
     briefing_text = generate_ai_briefing(metrics_pkg, gemini_key, model=model, mode=mode)
     print("\n--- [카카오톡 발송 텍스트] ---\n" + briefing_text + "\n-----------------------------\n")
 
