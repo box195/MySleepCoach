@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MySleepCoach | 핏빗 에어 정밀 수면 & 생체리듬 대시보드</title>
+  <meta name="description" content="Google Fitbit Air와 Google Health API 기반의 14일 지수감쇠 수면부채, 서카디안 생체리듬 및 Whoop 스타일 일일 부하 분석 모바일 대시보드">
+  <meta name="theme-color" content="#080C15">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- SVG Gradient Definitions -->
+  <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="emerald-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#34D399" />
+        <stop offset="100%" stop-color="#059669" />
+      </linearGradient>
+      <linearGradient id="purple-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#A78BFA" />
+        <stop offset="100%" stop-color="#6366F1" />
+      </linearGradient>
+      <linearGradient id="amber-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#FBBF24" />
+        <stop offset="100%" stop-color="#D97706" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <div class="app-container">
+
+    <!-- Top App Header -->
+    <header class="app-header">
+      <div class="device-badge">
+        <div class="pulse-dot"></div>
+        <span id="device-name">Google Fitbit Air</span>
+      </div>
+      <div class="date-badge" id="current-date">2026-09-13</div>
+    </header>
+
+    <!-- ================================================================= -->
+    <!-- TAB 1: 🏠 대시보드 (HOME) -->
+    <!-- ================================================================= -->
+    <main id="tab-home" class="tab-content active">
+
+      <!-- Hero Recovery Gauge Card -->
+      <section class="glass-card hero-recovery">
+        <div class="gauge-wrapper">
+          <svg class="gauge-svg" viewBox="0 0 160 160">
+            <circle class="gauge-bg" cx="80" cy="80" r="70" />
+            <circle id="condition-gauge-path" class="gauge-progress" cx="80" cy="80" r="70" />
+          </svg>
+          <div class="gauge-center">
+            <span class="gauge-score font-heading" id="condition-score-val">0</span>
+            <span class="gauge-label font-heading">Recovery</span>
+          </div>
+        </div>
+
+        <div id="recovery-pill" class="recovery-status-pill">컨디션 측정 중...</div>
+        <p id="recovery-subtitle" class="recovery-subtitle">
+          핏빗 에어 데이터를 분석하고 있습니다.
+        </p>
+      </section>
+
+      <!-- Quick 4 Tiles Grid -->
+      <section class="metric-grid">
+        <!-- Tile 1: Sleep Debt -->
+        <div class="metric-tile">
+          <div class="metric-header">
+            <span>정밀 수면부채</span>
+            <span class="metric-icon">📉</span>
+          </div>
+          <div class="metric-value font-heading" id="quick-debt-val">-</div>
+          <div class="metric-sub">
+            <span id="quick-debt-badge" class="badge-tag warning">지수감쇠</span>
+          </div>
+        </div>
+
+        <!-- Tile 2: Total Sleep -->
+        <div class="metric-tile">
+          <div class="metric-header">
+            <span>실 수면시간</span>
+            <span class="metric-icon">💤</span>
+          </div>
+          <div class="metric-value font-heading" id="quick-sleep-val">-</div>
+          <div class="metric-sub" id="quick-balance-val">목표 대비 +0h</div>
+        </div>
+
+        <!-- Tile 3: Efficiency -->
+        <div class="metric-tile">
+          <div class="metric-header">
+            <span>수면 효율</span>
+            <span class="metric-icon">✨</span>
+          </div>
+          <div class="metric-value font-heading" id="quick-eff-val">-</div>
+          <div class="metric-sub" id="quick-stages-ratio">깊은+렘 0%</div>
+        </div>
+
+        <!-- Tile 4: Day Strain -->
+        <div class="metric-tile">
+          <div class="metric-header">
+            <span>일일 신체부하</span>
+            <span class="metric-icon">🔥</span>
+          </div>
+          <div class="metric-value font-heading" id="quick-strain-val">-</div>
+          <div class="metric-sub" id="quick-steps-val">0 걸음</div>
+        </div>
+      </section>
+
+      <!-- Circadian Energy Curve Timeline -->
+      <section class="glass-card">
+        <div class="section-title">
+          <span>생체 리듬 24H 에너지 곡선</span>
+          <span style="font-size: 11px; font-weight: 500; color: var(--accent-cyan);">기상 시각 기반</span>
+        </div>
+        <div id="circadian-timeline-list" class="timeline-list">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
+      <!-- Gemini AI Coaching Card -->
+      <section class="glass-card ai-card">
+        <div class="ai-header">
+          <span class="ai-badge">Gemini 3.6 Flash</span>
+          <span style="font-size: 13px; font-weight: 600;">오늘의 맞춤 건강 처방</span>
+        </div>
+        <div class="ai-body" id="ai-briefing-text">
+          AI 분석 브리핑을 불러오는 중입니다...
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ================================================================= -->
+    <!-- TAB 2: 🌙 수면 정밀 (SLEEP DETAIL) -->
+    <!-- ================================================================= -->
+    <main id="tab-sleep" class="tab-content">
+
+      <!-- Sleep Stage Stack Bar -->
+      <section class="glass-card">
+        <div class="section-title">
+          <span>어젯밤 수면 단계 상세</span>
+          <span style="font-size: 12px; color: var(--text-muted);">초정밀 센서 로그</span>
+        </div>
+
+        <div class="stage-bar-wrapper">
+          <div class="stage-bar">
+            <div id="seg-deep" class="stage-seg deep" style="width: 20%;"></div>
+            <div id="seg-rem" class="stage-seg rem" style="width: 30%;"></div>
+            <div id="seg-light" class="stage-seg light" style="width: 45%;"></div>
+            <div id="seg-awake" class="stage-seg awake" style="width: 5%;"></div>
+          </div>
+
+          <div class="stage-legend">
+            <div class="legend-item">
+              <div class="legend-dot deep"></div>
+              <span class="legend-text">깊은 수면 (근육 회복)</span>
+              <span class="legend-val font-heading" id="val-deep">-</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot rem"></div>
+              <span class="legend-text">렘 수면 (뇌/기억 정리)</span>
+              <span class="legend-val font-heading" id="val-rem">-</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot light"></div>
+              <span class="legend-text">얕은 수면 (기초 휴식)</span>
+              <span class="legend-val font-heading" id="val-light">-</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot awake"></div>
+              <span class="legend-text">깬 시간 (각성)</span>
+              <span class="legend-val font-heading" id="val-awake">-</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 14-Day Sleep Bar Chart -->
+      <section class="glass-card">
+        <div class="section-title">
+          <span>최근 14일 수면 트렌드</span>
+          <span style="font-size: 11px; color: var(--text-secondary);">초록: 오늘 / 빨강: 수면부족</span>
+        </div>
+
+        <div id="chart-bars" class="chart-container">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Metric comparison box -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 14px; text-align: center;">
+          <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">지수감쇠 부채</div>
+            <div id="detail-exp-debt" style="font-size: 14px; font-weight: 700; color: #FBBF24;">-</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">단순 14일 합산</div>
+            <div id="detail-simple-debt" style="font-size: 14px; font-weight: 700; color: var(--text-secondary);">-</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">7일 일평균 수면</div>
+            <div id="detail-avg-7d" style="font-size: 14px; font-weight: 700; color: #38BDF8;">-</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Interactive Sleep Target Slider -->
+      <section class="glass-card">
+        <div class="section-title">
+          <span>내 적정 수면량(Sleep Need) 조절</span>
+          <span id="target-slider-val" style="font-size: 14px; font-weight: 700; color: var(--accent-emerald);">8.0시간</span>
+        </div>
+        <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;">
+          개인에 맞는 목표 수면량을 조절하면 수면 부채와 밸런스가 실시간으로 재계산됩니다.
+        </p>
+        <div class="slider-wrapper">
+          <input type="range" id="target-slider" min="6.5" max="9.5" step="0.5" value="8.0">
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ================================================================= -->
+    <!-- TAB 3: 🏃 운동·활동 (ACTIVITY & STRAIN) -->
+    <!-- ================================================================= -->
+    <main id="tab-activity" class="tab-content">
+
+      <!-- Day Strain Card (Whoop Style) -->
+      <section class="glass-card">
+        <div class="section-title">
+          <span>일일 신체 부하 (Day Strain)</span>
+          <span style="font-size: 11px; color: var(--accent-indigo);">Whoop 알고리즘</span>
+        </div>
+
+        <div class="strain-banner">
+          <div class="strain-ring">
+            <svg viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6" />
+              <circle id="strain-ring-circle" cx="40" cy="40" r="34" fill="none" stroke="url(#purple-grad)" stroke-width="6" stroke-dasharray="214" stroke-dashoffset="214" stroke-linecap="round" style="transition: stroke-dashoffset 1.2s var(--transition-smooth);" />
+            </svg>
+            <div class="strain-ring-center font-heading" id="strain-score-val">0</div>
+          </div>
+
+          <div style="flex: 1;">
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">오늘의 권장 부하 타깃</div>
+            <div id="strain-target-val" style="font-size: 15px; font-weight: 700; color: #FFF; margin-bottom: 6px;">14.0 ~ 17.0</div>
+            <div id="strain-rec-val" style="font-size: 12px; color: var(--text-secondary); line-height: 1.4;">-</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Steps & Calories Card -->
+      <section class="glass-card">
+        <div class="section-title">
+          <span>일일 활동 달성도</span>
+          <span id="act-steps-pct" style="font-size: 12px; font-weight: 600; color: var(--accent-emerald);">0% 달성</span>
+        </div>
+
+        <div style="margin: 12px 0 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
+            <span style="font-size: 28px; font-weight: 800;" class="font-heading" id="act-steps-val">0</span>
+            <span style="font-size: 12px; color: var(--text-muted);">목표 10,000 걸음</span>
+          </div>
+          <div style="height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden;">
+            <div id="act-steps-bar" style="height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent-emerald), #059669); border-radius: 4px; transition: width 1s var(--transition-smooth);"></div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-top: 1px solid var(--border-subtle); padding-top: 14px;">
+          <div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">소모 칼로리</div>
+            <div id="act-cal-val" style="font-size: 18px; font-weight: 700;">- kcal</div>
+          </div>
+          <div>
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">중고강도 운동 시간</div>
+            <div id="act-min-val" style="font-size: 18px; font-weight: 700;">- 분</div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ================================================================= -->
+    <!-- TAB 4: ℹ️ 과학적 원리 (SCIENCE & FORMULA) -->
+    <!-- ================================================================= -->
+    <main id="tab-science" class="tab-content">
+      <section class="glass-card">
+        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">📐 수면부채 지수 감쇠(Exponential Decay) 공식</h3>
+        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+          기존의 단순 수면부채는 14일 전의 피로와 어제의 피로를 동일하게 취급하지만, 인간의 생체 리듬은 최근 며칠의 수면에 훨씬 민감하게 반응합니다.
+        </p>
+
+        <div class="formula-box">
+          Cumulative Debt = Σ [ e^(-0.15 × d) × (Sleep Need - Effective Sleep_d) ]<br>
+          (d=0 어제 가중치 1.00 ➔ d=3 가중치 0.64 ➔ d=13 가중치 0.14)
+        </div>
+
+        <h3 style="font-size: 16px; font-weight: 700; margin: 18px 0 10px;">🧬 유효 회복 수면 (Effective Restorative Sleep)</h3>
+        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+          단순히 침대에 누워있던 시간이 아니라, 뇌와 근육을 실질적으로 회복시킨 수면 단계(깊은 수면 + 렘 수면)와 중간 깬 시간(각성도)을 반영하여 유효 수면을 보정합니다.
+        </p>
+
+        <div class="formula-box">
+          Effective Sleep = Actual Sleep × (Efficiency / 100) ×<br>
+          [ 1.0 + 0.25 × (Deep/Total) + 0.15 × (REM/Total) - 0.2 × (Awake/BedTime) ]
+        </div>
+
+        <h3 style="font-size: 16px; font-weight: 700; margin: 18px 0 10px;">⏰ 서카디안 오후 슬럼프 (Circadian Dip)</h3>
+        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+          기상 후 7~9시간 뒤에는 생체 시계에 의해 심부 체온이 일시적으로 하강하며 강한 졸음이 찾아옵니다. 이때 수면 부채가 누적되어 있다면 극심한 인지 저하가 발생하므로 15분 파워냅이 필수적입니다.
+        </p>
+      </section>
+    </main>
+
+  </div>
+
+  <!-- Bottom Sticky Tab Bar -->
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-tab="tab-home">
+      <span class="tab-icon">🏠</span>
+      <span class="tab-label">대시보드</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-sleep">
+      <span class="tab-icon">🌙</span>
+      <span class="tab-label">수면 정밀</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-activity">
+      <span class="tab-icon">🏃</span>
+      <span class="tab-label">운동·활동</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-science">
+      <span class="tab-icon">ℹ️</span>
+      <span class="tab-label">과학적 원리</span>
+    </button>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>
