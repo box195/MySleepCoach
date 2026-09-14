@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-14 21:15:25",
+  "updated_at": "2026-09-15 07:04:10",
   "today": {
     "date": "2026-09-14",
     "wake_time": "06:38",
@@ -8,9 +8,9 @@
     "daily_balance_hm": "-2시간 20분",
     "target_sleep_hm": "8시간 0분",
     "target_sleep_hours": 8.0,
-    "avg_7d_sleep_hm": "6시간 58분",
-    "exponential_debt_hm": "5시간 52분",
-    "exponential_debt_hours": 5.87,
+    "avg_7d_sleep_hm": "7시간 19분",
+    "exponential_debt_hm": "5시간 20분",
+    "exponential_debt_hours": 5.34,
     "simple_debt_hm": "12시간 41분",
     "debt_status": "🟡 주의 (오후 슬럼프 주의)",
     "debt_badge_class": "warning",
@@ -23,7 +23,7 @@
     "awake_hm": "0시간 4분",
     "awake_hours": 0.07,
     "sleep_efficiency": 98,
-    "condition_score": 68,
+    "condition_score": 69,
     "device_name": "Google Fitbit Air"
   },
   "circadian_windows": [
@@ -52,7 +52,7 @@
       "icon": "💤",
       "level": "dip",
       "status_text": "졸음 주의 구간",
-      "desc": "누적 부채(5시간 52분)로 인해 강한 나른함이 옵니다. 15분 파워냅을 강력 추천합니다."
+      "desc": "누적 부채(5시간 20분)로 인해 강한 나른함이 옵니다. 15분 파워냅을 강력 추천합니다."
     },
     {
       "id": "peak_2",
@@ -230,6 +230,20 @@
     },
     {
       "date": "2026-09-14",
+      "wake_time": "06:55",
+      "wake_dt": "2026-09-15 06:55:00+09:00",
+      "asleep_hours": 8.04,
+      "effective_sleep_hours": 8.39,
+      "bed_hours": 8.3,
+      "deep_hours": 1.53,
+      "rem_hours": 1.91,
+      "light_hours": 4.6,
+      "awake_hours": 0.26,
+      "efficiency": 96,
+      "device": "Google Fitbit Air"
+    },
+    {
+      "date": "2026-09-14",
       "wake_time": "06:38",
       "wake_dt": "2026-09-14 06:38:00+09:00",
       "asleep_hours": 5.66,
@@ -252,5 +266,5 @@
     "strain_target": "10.0 ~ 13.5 (중강도 유지)",
     "strain_rec": "수면 부채가 일부 존재하므로 무리한 최고 강도 대신, 30~40분의 꾸준한 유산소나 분할 웨이트를 추천합니다."
   },
-  "ai_briefing": "🌙 [Fitbit AI 수면 & 바이탈 리포트]\n\n• 어젯밤 수면: 5시간 40분 (효율 98% / 목표 대비 -2h 20m)\n• 수면 부채: 5시간 52분 🟡 (오후 슬럼프 주의)\n• 컨디션 점수: 68점 (오늘 권장 운동부하: 10.0~13.5)\n\n💡 수면 부족으로 뇌 피로가 높으니, 점심 직후 15분 햇볕 산책으로 오후 졸음을 예방하세요!\n\n자세한 인터랙티브 차트는 아래 버튼을 눌러 확인하세요!"
+  "ai_briefing": "☀️ [굿모닝 수면 & 바이탈 리포트]\n\n• 수면 시간: 5시간 40분 (효율 98%의 고밀도 수면)\n• 수면 부채: 5시간 20분 🟡 (오후 슬럼프 주의)\n• 컨디션 점수: 69점 (권장 운동 부하: 10.0~13.5)\n\n🧠 수면 절대량 부족으로 뇌 피로가 남아 오후 2시쯤 강한 졸음이 올 수 있으니, 점심 후 15분 햇볕 산책을 추천합니다!\n\n자세한 인터랙티브 차트는 아래 버튼을 눌러 확인하세요!"
 }
