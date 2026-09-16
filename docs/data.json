@@ -1,29 +1,29 @@
 {
-  "updated_at": "2026-09-16 21:14:55",
+  "updated_at": "2026-09-17 07:03:49",
   "today": {
-    "date": "2026-09-15",
+    "date": "2026-09-17",
     "wake_time": "06:54",
-    "today_sleep_hm": "7시간 42분",
-    "today_sleep_hours": 7.7,
-    "daily_balance_hm": "-0시간 18분",
+    "today_sleep_hm": "4시간 11분",
+    "today_sleep_hours": 4.18,
+    "daily_balance_hm": "-3시간 49분",
     "target_sleep_hm": "8시간 0분",
     "target_sleep_hours": 8.0,
-    "avg_7d_sleep_hm": "7시간 16분",
-    "exponential_debt_hm": "4시간 27분",
-    "exponential_debt_hours": 4.45,
-    "simple_debt_hm": "11시간 43분",
-    "debt_status": "🟡 주의 (오후 슬럼프 주의)",
-    "debt_badge_class": "warning",
-    "deep_hm": "1시간 31분",
-    "deep_hours": 1.52,
-    "rem_hm": "1시간 35분",
-    "rem_hours": 1.59,
-    "light_hm": "4시간 35분",
-    "light_hours": 4.59,
-    "awake_hm": "0시간 13분",
-    "awake_hours": 0.22,
-    "sleep_efficiency": 97,
-    "condition_score": 84,
+    "avg_7d_sleep_hm": "6시간 59분",
+    "exponential_debt_hm": "8시간 10분",
+    "exponential_debt_hours": 8.17,
+    "simple_debt_hm": "14시간 4분",
+    "debt_status": "🔴 고위험 (만성 피로 누적)",
+    "debt_badge_class": "danger",
+    "deep_hm": "0시간 49분",
+    "deep_hours": 0.82,
+    "rem_hm": "0시간 56분",
+    "rem_hours": 0.94,
+    "light_hm": "2시간 25분",
+    "light_hours": 2.42,
+    "awake_hm": "1시간 0분",
+    "awake_hours": 1.0,
+    "sleep_efficiency": 80,
+    "condition_score": 54,
     "device_name": "Google Fitbit Air"
   },
   "circadian_windows": [
@@ -52,7 +52,7 @@
       "icon": "💤",
       "level": "dip",
       "status_text": "졸음 주의 구간",
-      "desc": "누적 부채(4시간 27분)로 인해 강한 나른함이 옵니다. 15분 파워냅을 강력 추천합니다."
+      "desc": "누적 부채(8시간 10분)로 인해 강한 나른함이 옵니다. 15분 파워냅을 강력 추천합니다."
     },
     {
       "id": "peak_2",
@@ -74,34 +74,6 @@
     }
   ],
   "recent_14_days": [
-    {
-      "date": "2026-09-04",
-      "wake_time": "06:57",
-      "wake_dt": "2026-09-04 06:57:00+09:00",
-      "asleep_hours": 6.53,
-      "effective_sleep_hours": 7.03,
-      "bed_hours": 6.63,
-      "deep_hours": 1.83,
-      "rem_hours": 1.13,
-      "light_hours": 3.57,
-      "awake_hours": 0.1,
-      "efficiency": 98,
-      "device": "Google Fitbit Air"
-    },
-    {
-      "date": "2026-09-05",
-      "wake_time": "11:54",
-      "wake_dt": "2026-09-05 11:54:00+09:00",
-      "asleep_hours": 9.43,
-      "effective_sleep_hours": 9.91,
-      "bed_hours": 9.73,
-      "deep_hours": 1.88,
-      "rem_hours": 2.67,
-      "light_hours": 4.88,
-      "awake_hours": 0.31,
-      "efficiency": 96,
-      "device": "Google Fitbit Air"
-    },
     {
       "date": "2026-09-06",
       "wake_time": "10:29",
@@ -255,6 +227,20 @@
       "awake_hours": 0.22,
       "efficiency": 97,
       "device": "Google Fitbit Air"
+    },
+    {
+      "date": "2026-09-17",
+      "wake_time": "06:54",
+      "wake_dt": "2026-09-17 06:54:00+09:00",
+      "asleep_hours": 4.18,
+      "effective_sleep_hours": 3.52,
+      "bed_hours": 5.18,
+      "deep_hours": 0.82,
+      "rem_hours": 0.94,
+      "light_hours": 2.42,
+      "awake_hours": 1.0,
+      "efficiency": 80,
+      "device": "Google Fitbit Air"
     }
   ],
   "activity": {
@@ -263,8 +249,8 @@
     "calories": 2140,
     "active_minutes": 45,
     "strain_score": 15.8,
-    "strain_target": "14.0 ~ 17.0 (고강도 운동 가능)",
-    "strain_rec": "신체 회복도가 훌륭합니다. 인터벌 러닝이나 고중량 근력 운동으로 심폐와 근력을 한계까지 자극해도 무리가 없습니다."
+    "strain_target": "6.0 ~ 9.0 (능동적 회복)",
+    "strain_rec": "피로 누적이 심한 상태입니다. 폼롤러 스트레칭, 가벼운 산책 등 림프 순환을 돕는 회복 위주 세션을 권장합니다."
   },
-  "ai_briefing": "🌙 [오늘의 수면 & 바이탈 리포트]\n\n• 어젯밤 수면: 7시간 42분 (효율 97% / 뇌·근육 회복 양호)\n• 누적 수면부채: 4시간 27분 🟡 (오후 슬럼프 주의)\n• 신체 컨디션: 84점 (고강도 운동 가능 부하 14.0~17.0)\n💡 **바디 상태 & 팁**: 몸 상태는 양호하나 누적 피로로 오후 2시쯤 강한 졸음이 올 수 있으니, 점심 후 15분 햇볕 산책을 추천합니다!\n\n자세한 인터랙티브 차트는 아래 버튼을 눌러 확인하세요!"
+  "ai_briefing": "☀️ **[굿모닝 수면 & 바이탈 리포트]**\n\n• 수면 시간: 4시간 11분 (기준 대비 -3시간 49분)\n• 수면 부채: 8시간 10분 🔴 [만성 피로 고위험]\n• 컨디션 점수: 54점 / 100점 (권장: 가벼운 회복 운동)\n\n💡 깊은·렘수면 부족으로 뇌와 근육 피로가 높으니, 오후 슬럼프 예방을 위해 점심 후 10분 산책을 추천합니다!\n\n자세한 인터랙티브 차트는 아래 버튼을 눌러 확인하세요!"
 }
