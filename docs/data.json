@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-17 21:14:56",
+  "updated_at": "2026-09-18 07:04:23",
   "today": {
     "date": "2026-09-17",
     "wake_time": "06:54",
@@ -8,10 +8,10 @@
     "daily_balance_hm": "-3시간 49분",
     "target_sleep_hm": "8시간 0분",
     "target_sleep_hours": 8.0,
-    "avg_7d_sleep_hm": "6시간 59분",
-    "exponential_debt_hm": "8시간 10분",
-    "exponential_debt_hours": 8.17,
-    "simple_debt_hm": "14시간 4분",
+    "avg_7d_sleep_hm": "7시간 13분",
+    "exponential_debt_hm": "7시간 40분",
+    "exponential_debt_hours": 7.66,
+    "simple_debt_hm": "14시간 30분",
     "debt_status": "🔴 고위험 (만성 피로 누적)",
     "debt_badge_class": "danger",
     "deep_hm": "0시간 49분",
@@ -23,7 +23,7 @@
     "awake_hm": "1시간 0분",
     "awake_hours": 1.0,
     "sleep_efficiency": 80,
-    "condition_score": 54,
+    "condition_score": 55,
     "device_name": "Google Fitbit Air"
   },
   "circadian_windows": [
@@ -52,7 +52,7 @@
       "icon": "💤",
       "level": "dip",
       "status_text": "졸음 주의 구간",
-      "desc": "누적 부채(8시간 10분)로 인해 강한 나른함이 옵니다. 15분 파워냅을 강력 추천합니다."
+      "desc": "누적 부채(7시간 40분)로 인해 강한 나른함이 옵니다. 15분 파워냅을 강력 추천합니다."
     },
     {
       "id": "peak_2",
@@ -74,20 +74,6 @@
     }
   ],
   "recent_14_days": [
-    {
-      "date": "2026-09-06",
-      "wake_time": "10:29",
-      "wake_dt": "2026-09-06 10:29:00+09:00",
-      "asleep_hours": 8.65,
-      "effective_sleep_hours": 8.93,
-      "bed_hours": 8.95,
-      "deep_hours": 1.32,
-      "rem_hours": 2.12,
-      "light_hours": 5.21,
-      "awake_hours": 0.3,
-      "efficiency": 96,
-      "device": "Google Fitbit Air"
-    },
     {
       "date": "2026-09-07",
       "wake_time": "06:46",
@@ -230,6 +216,20 @@
     },
     {
       "date": "2026-09-17",
+      "wake_time": "06:52",
+      "wake_dt": "2026-09-18 06:52:00+09:00",
+      "asleep_hours": 7.56,
+      "effective_sleep_hours": 8.07,
+      "bed_hours": 7.78,
+      "deep_hours": 1.98,
+      "rem_hours": 2.03,
+      "light_hours": 3.54,
+      "awake_hours": 0.23,
+      "efficiency": 97,
+      "device": "Google Fitbit Air"
+    },
+    {
+      "date": "2026-09-17",
       "wake_time": "06:54",
       "wake_dt": "2026-09-17 06:54:00+09:00",
       "asleep_hours": 4.18,
@@ -252,5 +252,5 @@
     "strain_target": "6.0 ~ 9.0 (능동적 회복)",
     "strain_rec": "피로 누적이 심한 상태입니다. 폼롤러 스트레칭, 가벼운 산책 등 림프 순환을 돕는 회복 위주 세션을 권장합니다."
   },
-  "ai_briefing": "☀️ [굿모닝 수면 & 바이탈 리포트]\n\n• 수면 시간: 4시간 11분 (효율 80%)\n• 신체 컨디션 점수: 54점 ⚡\n• 누적 수면 부채: 8시간 10분 (🔴 고위험 (만성 피로 누적))\n\n💡 누적된 부채로 오후 슬럼프가 예상되니 점심 후 15분 파워냅을 추천합니다.\n👉 상세한 서카디안 리듬과 운동 리포트는 아래 버튼을 눌러 확인하세요!"
+  "ai_briefing": "☀️ [굿모닝 수면 & 바이탈 리포트]\n\n• 수면 시간: 4시간 11분 (수면효율 80%)\n• 수면 부채: 7시간 40분 🔴 고위험\n• 컨디션 점수: 55점 / 100점\n\n💡 뇌·근육 피로가 심해 오후 슬럼프가 예상되니, 고강도 운동 대신 '10분 산책'으로 능동적 회복을 해주세요!\n자세한 인터랙티브 차트는 아래 버튼을 눌러 확인하세요!"
 }
