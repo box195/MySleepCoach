@@ -987,3 +987,138 @@ input[type=range]::-webkit-slider-thumb {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Whoop Recovery vs Day Strain Balance Card */
+.strain-balance-card {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%), var(--card-bg);
+}
+
+.balance-bars-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.balance-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.balance-label-col {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+.balance-label-col .lbl {
+  color: var(--text-muted);
+}
+
+.balance-label-col .val {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.balance-track {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.balance-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.8s var(--transition-smooth);
+}
+
+.balance-fill.recovery {
+  background: linear-gradient(90deg, #10B981, #059669);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+.balance-fill.strain {
+  background: linear-gradient(90deg, #8B5CF6, #6366F1);
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+}
+
+.balance-advice-box {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #E2E8F0;
+  line-height: 1.5;
+}
+
+/* Metric Mode Switcher (Sleep vs Strain) */
+.metric-mode-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.mode-btn {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 9px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s var(--transition-smooth);
+}
+
+.mode-btn.active {
+  background: rgba(99, 102, 241, 0.2);
+  border-color: var(--accent-indigo);
+  color: #FFFFFF;
+  box-shadow: 0 2px 12px rgba(99, 102, 241, 0.25);
+}
+
+.chart-bar-fill.strain-bar {
+  background: linear-gradient(180deg, #8B5CF6, #6366F1);
+}
+
+.chart-bar-fill.strain-bar.optimal {
+  background: linear-gradient(180deg, #10B981, #059669);
+}
+
+.chart-bar-fill.strain-bar.overreach {
+  background: linear-gradient(180deg, #F43F5E, #BE123C);
+}
+
+.chart-col-dot {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #38BDF8;
+  box-shadow: 0 0 6px #38BDF8;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.chart-col-dot.recovery-high {
+  background: #10B981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.9);
+}
+
+.chart-col-dot.recovery-mid {
+  background: #F59E0B;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.9);
+}
+
+.chart-col-dot.recovery-low {
+  background: #F43F5E;
+  box-shadow: 0 0 6px rgba(244, 63, 94, 0.9);
+}
+
