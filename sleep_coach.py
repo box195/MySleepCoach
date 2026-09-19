@@ -540,7 +540,7 @@ def generate_ai_briefing(metrics_pkg, gemini_key, model="models/gemini-3.8-flash
 5. 절대 길게 쓰지 말고 카톡에서 한눈에 쏙 들어오게 7줄 내외로 압축할 것.
 """
 
-    for m in [model, "models/gemini-3.6-flash"]:
+    for m in [model, "models/gemini-2.5-flash"]:
         try:
             url = f"https://generativelanguage.googleapis.com/v1beta/{m}:generateContent?key={gemini_key}"
             req_body = json.dumps({
@@ -646,9 +646,9 @@ def run(mode="morning"):
     print(f"- 크로노타입: {metrics_pkg['chronotype']['name']}")
     print(f"- 수면 일관성: {metrics_pkg['consistency']['score']}점 ({metrics_pkg['consistency']['label']})")
 
-    print("\n4. Gemini 3.8 Flash 코칭 생성 중...")
+    print("\n4. Gemini 2.5 Flash 코칭 생성 중...")
     gemini_key = cfg["gemini"]["api_key"]
-    model = cfg["gemini"].get("model", "models/gemini-3.8-flash")
+    model = cfg["gemini"].get("model", "models/gemini-2.5-flash")
     briefing_text = generate_ai_briefing(metrics_pkg, gemini_key, model=model, mode=mode)
     print("\n--- [카카오톡 발송 텍스트] ---\n" + briefing_text + "\n-----------------------------\n")
 
