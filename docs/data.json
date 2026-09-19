@@ -1,253 +1,197 @@
 {
-  "updated_at": "2026-09-19 07:04:17",
+  "updated_at": "2026-09-19 09:11:05",
   "today": {
-    "date": "2026-09-18",
-    "bed_time": "23:05",
-    "wake_time": "06:52",
-    "today_sleep_hm": "7시간 34분",
-    "today_sleep_hours": 7.56,
-    "daily_balance_hm": "-0시간 26분",
+    "date": "2026-09-19",
+    "bed_time": "01:46",
+    "wake_time": "08:40",
+    "today_sleep_hm": "6시간 50분",
+    "today_sleep_hours": 6.83,
+    "daily_balance_hm": "-1시간 10분",
     "target_sleep_hm": "8시간 0분",
     "target_sleep_hours": 8.0,
-    "avg_7d_sleep_hm": "7시간 13분",
-    "avg_14d_sleep_hm": "7시간 17분",
-    "avg_all_sleep_hm": "7시간 24분",
-    "total_recorded_days": 104,
-    "exponential_debt_hm": "3시간 8분",
-    "exponential_debt_hours": 3.14,
+    "avg_7d_sleep_hm": "7시간 12분",
+    "avg_14d_sleep_hm": "7시간 6분",
+    "avg_all_sleep_hm": "7시간 23분",
+    "total_recorded_days": 105,
+    "exponential_debt_hm": "3시간 1분",
+    "exponential_debt_hours": 3.01,
     "debt_status": "🟡 주의 (오후 슬럼프 주의)",
     "debt_badge_class": "warning",
-    "deep_hm": "1시간 59분",
-    "deep_hours": 1.98,
-    "deep_pct": 26,
-    "rem_hm": "2시간 2분",
-    "rem_hours": 2.03,
-    "rem_pct": 27,
-    "light_hm": "3시간 32분",
-    "light_hours": 3.54,
-    "light_pct": 47,
-    "awake_hm": "0시간 14분",
-    "awake_hours": 0.23,
-    "sleep_efficiency": 97,
-    "condition_score": 89,
+    "deep_hm": "1시간 25분",
+    "deep_hours": 1.42,
+    "deep_pct": 21,
+    "rem_hm": "1시간 48분",
+    "rem_hours": 1.79,
+    "rem_pct": 26,
+    "light_hm": "3시간 37분",
+    "light_hours": 3.62,
+    "light_pct": 53,
+    "awake_hm": "0시간 4분",
+    "awake_hours": 0.07,
+    "sleep_efficiency": 98,
+    "condition_score": 86,
     "device_name": "Google Fitbit Air",
     "hypnogram": [
       {
         "type": "AWAKE",
-        "start_time": "23:05",
-        "end_time": "23:18",
+        "start_time": "01:46",
+        "end_time": "01:50",
         "start_min_offset": 0.0,
-        "dur_min": 13.0
+        "dur_min": 4.5
       },
       {
         "type": "LIGHT",
-        "start_time": "23:18",
-        "end_time": "23:24",
-        "start_min_offset": 13.0,
-        "dur_min": 6.0
+        "start_time": "01:50",
+        "end_time": "02:04",
+        "start_min_offset": 4.5,
+        "dur_min": 13.5
       },
       {
         "type": "DEEP",
-        "start_time": "23:24",
-        "end_time": "00:03",
-        "start_min_offset": 19.0,
-        "dur_min": 39.0
+        "start_time": "02:04",
+        "end_time": "02:30",
+        "start_min_offset": 18.0,
+        "dur_min": 26.5
       },
       {
         "type": "LIGHT",
-        "start_time": "00:03",
-        "end_time": "00:40",
-        "start_min_offset": 58.0,
-        "dur_min": 37.5
+        "start_time": "02:30",
+        "end_time": "02:43",
+        "start_min_offset": 44.5,
+        "dur_min": 12.5
       },
       {
-        "type": "DEEP",
-        "start_time": "00:40",
-        "end_time": "00:46",
-        "start_min_offset": 95.5,
-        "dur_min": 6.0
-      },
-      {
-        "type": "LIGHT",
-        "start_time": "00:46",
-        "end_time": "00:50",
-        "start_min_offset": 101.5,
-        "dur_min": 4.0
-      },
-      {
-        "type": "DEEP",
-        "start_time": "00:50",
-        "end_time": "01:03",
-        "start_min_offset": 105.5,
+        "type": "REM",
+        "start_time": "02:43",
+        "end_time": "02:55",
+        "start_min_offset": 57.0,
         "dur_min": 12.5
       },
       {
         "type": "LIGHT",
-        "start_time": "01:03",
-        "end_time": "01:09",
-        "start_min_offset": 118.0,
-        "dur_min": 6.5
+        "start_time": "02:55",
+        "end_time": "03:18",
+        "start_min_offset": 69.5,
+        "dur_min": 22.5
       },
       {
         "type": "DEEP",
-        "start_time": "01:09",
-        "end_time": "01:16",
-        "start_min_offset": 124.5,
-        "dur_min": 7.0
+        "start_time": "03:18",
+        "end_time": "03:38",
+        "start_min_offset": 92.0,
+        "dur_min": 20.0
       },
       {
         "type": "LIGHT",
-        "start_time": "01:16",
-        "end_time": "01:20",
-        "start_min_offset": 131.5,
-        "dur_min": 3.5
+        "start_time": "03:38",
+        "end_time": "03:46",
+        "start_min_offset": 112.0,
+        "dur_min": 8.0
       },
       {
         "type": "DEEP",
-        "start_time": "01:20",
-        "end_time": "01:40",
-        "start_min_offset": 135.0,
-        "dur_min": 20.5
+        "start_time": "03:46",
+        "end_time": "04:04",
+        "start_min_offset": 120.0,
+        "dur_min": 18.5
       },
       {
         "type": "LIGHT",
-        "start_time": "01:40",
-        "end_time": "01:47",
-        "start_min_offset": 155.5,
-        "dur_min": 7.0
+        "start_time": "04:04",
+        "end_time": "04:12",
+        "start_min_offset": 138.5,
+        "dur_min": 7.5
       },
       {
         "type": "REM",
-        "start_time": "01:47",
-        "end_time": "02:05",
-        "start_min_offset": 162.5,
-        "dur_min": 18.0
+        "start_time": "04:12",
+        "end_time": "04:51",
+        "start_min_offset": 146.0,
+        "dur_min": 39.0
       },
       {
         "type": "LIGHT",
-        "start_time": "02:05",
-        "end_time": "02:08",
-        "start_min_offset": 180.5,
-        "dur_min": 2.5
+        "start_time": "04:51",
+        "end_time": "05:48",
+        "start_min_offset": 185.0,
+        "dur_min": 57.0
       },
       {
         "type": "REM",
-        "start_time": "02:08",
-        "end_time": "02:42",
-        "start_min_offset": 183.0,
-        "dur_min": 34.0
+        "start_time": "05:48",
+        "end_time": "06:16",
+        "start_min_offset": 242.0,
+        "dur_min": 28.0
       },
       {
         "type": "LIGHT",
-        "start_time": "02:42",
-        "end_time": "03:06",
-        "start_min_offset": 217.0,
-        "dur_min": 24.0
+        "start_time": "06:16",
+        "end_time": "06:41",
+        "start_min_offset": 270.0,
+        "dur_min": 25.0
       },
       {
         "type": "DEEP",
-        "start_time": "03:06",
-        "end_time": "03:11",
-        "start_min_offset": 241.0,
-        "dur_min": 5.0
+        "start_time": "06:41",
+        "end_time": "06:45",
+        "start_min_offset": 295.0,
+        "dur_min": 4.5
       },
       {
         "type": "LIGHT",
-        "start_time": "03:11",
-        "end_time": "03:27",
-        "start_min_offset": 246.0,
-        "dur_min": 16.5
-      },
-      {
-        "type": "DEEP",
-        "start_time": "03:27",
-        "end_time": "03:56",
-        "start_min_offset": 262.5,
-        "dur_min": 29.0
-      },
-      {
-        "type": "LIGHT",
-        "start_time": "03:56",
-        "end_time": "04:06",
-        "start_min_offset": 291.5,
-        "dur_min": 10.0
+        "start_time": "06:45",
+        "end_time": "06:58",
+        "start_min_offset": 299.5,
+        "dur_min": 13.0
       },
       {
         "type": "REM",
-        "start_time": "04:06",
-        "end_time": "04:10",
-        "start_min_offset": 301.5,
-        "dur_min": 4.0
+        "start_time": "06:58",
+        "end_time": "07:13",
+        "start_min_offset": 312.5,
+        "dur_min": 15.0
       },
       {
         "type": "LIGHT",
-        "start_time": "04:10",
-        "end_time": "04:30",
-        "start_min_offset": 305.5,
-        "dur_min": 19.5
-      },
-      {
-        "type": "REM",
-        "start_time": "04:30",
-        "end_time": "04:32",
-        "start_min_offset": 325.0,
-        "dur_min": 2.5
-      },
-      {
-        "type": "LIGHT",
-        "start_time": "04:32",
-        "end_time": "04:47",
+        "start_time": "07:13",
+        "end_time": "07:51",
         "start_min_offset": 327.5,
-        "dur_min": 14.5
+        "dur_min": 38.0
       },
       {
-        "type": "REM",
-        "start_time": "04:47",
-        "end_time": "05:21",
-        "start_min_offset": 342.0,
-        "dur_min": 34.0
-      },
-      {
-        "type": "LIGHT",
-        "start_time": "05:21",
-        "end_time": "06:12",
-        "start_min_offset": 376.0,
-        "dur_min": 51.0
-      },
-      {
-        "type": "REM",
-        "start_time": "06:12",
-        "end_time": "06:19",
-        "start_min_offset": 427.0,
-        "dur_min": 7.5
+        "type": "DEEP",
+        "start_time": "07:51",
+        "end_time": "08:07",
+        "start_min_offset": 365.5,
+        "dur_min": 15.5
       },
       {
         "type": "LIGHT",
-        "start_time": "06:19",
-        "end_time": "06:22",
-        "start_min_offset": 434.5,
-        "dur_min": 2.5
+        "start_time": "08:07",
+        "end_time": "08:15",
+        "start_min_offset": 381.0,
+        "dur_min": 8.0
       },
       {
         "type": "REM",
-        "start_time": "06:22",
-        "end_time": "06:44",
-        "start_min_offset": 437.0,
-        "dur_min": 22.0
+        "start_time": "08:15",
+        "end_time": "08:26",
+        "start_min_offset": 389.0,
+        "dur_min": 11.5
       },
       {
         "type": "LIGHT",
-        "start_time": "06:44",
-        "end_time": "06:51",
-        "start_min_offset": 459.0,
-        "dur_min": 7.5
+        "start_time": "08:26",
+        "end_time": "08:38",
+        "start_min_offset": 400.5,
+        "dur_min": 12.0
       },
       {
-        "type": "AWAKE",
-        "start_time": "06:51",
-        "end_time": "06:52",
-        "start_min_offset": 466.5,
-        "dur_min": 0.5
+        "type": "REM",
+        "start_time": "08:38",
+        "end_time": "08:40",
+        "start_min_offset": 412.5,
+        "dur_min": 1.5
       }
     ]
   },
@@ -255,7 +199,7 @@
     {
       "id": "inertia",
       "name": "수면 관성 해소기",
-      "time_range": "06:52 ~ 08:22",
+      "time_range": "08:40 ~ 10:10",
       "icon": "☕",
       "level": "low",
       "status_text": "신체 깨우기",
@@ -264,7 +208,7 @@
     {
       "id": "peak_1",
       "name": "오전 인지 피크 (골든아워)",
-      "time_range": "09:22 ~ 12:22",
+      "time_range": "11:10 ~ 14:10",
       "icon": "⚡",
       "level": "high",
       "status_text": "집중력 최고조",
@@ -273,16 +217,16 @@
     {
       "id": "dip",
       "name": "서카디안 오후 슬럼프",
-      "time_range": "13:52 ~ 15:52",
+      "time_range": "15:40 ~ 17:40",
       "icon": "💤",
       "level": "dip",
       "status_text": "졸음 주의 구간",
-      "desc": "누적 부채(3시간 8분)로 인해 생체 체온이 떨어지며 졸음이 옵니다. 15~20분 파워냅을 추천합니다."
+      "desc": "누적 부채(3시간 1분)로 인해 생체 체온이 떨어지며 졸음이 옵니다. 15~20분 파워냅을 추천합니다."
     },
     {
       "id": "peak_2",
       "name": "2차 신체 활력 피크",
-      "time_range": "17:52 ~ 20:22",
+      "time_range": "19:40 ~ 22:10",
       "icon": "🔥",
       "level": "medium-high",
       "status_text": "운동 골든아워",
@@ -291,7 +235,7 @@
     {
       "id": "wind_down",
       "name": "멜라토닌 수면 윈도우",
-      "time_range": "21:52 ~ 23:52",
+      "time_range": "23:40 ~ 01:40",
       "icon": "🌙",
       "level": "relax",
       "status_text": "권장 취침 준비",
@@ -305,7 +249,7 @@
   "consistency": {
     "score": 40,
     "label": "불규칙 (수면 리듬 교정 필요)",
-    "std_minutes": 104.9
+    "std_minutes": 104.4
   },
   "all_history": [
     {
@@ -3011,6 +2955,32 @@
       "daily_balance_hm": "-0시간 26분",
       "condition_score": 89,
       "device": "Google Fitbit Air"
+    },
+    {
+      "date": "2026-09-19",
+      "bed_time": "01:46",
+      "wake_time": "08:40",
+      "asleep_hours": 6.83,
+      "asleep_hm": "6시간 50분",
+      "bed_hours": 6.9,
+      "deep_hours": 1.42,
+      "deep_hm": "1시간 25분",
+      "deep_pct": 21,
+      "rem_hours": 1.79,
+      "rem_hm": "1시간 48분",
+      "rem_pct": 26,
+      "light_hours": 3.62,
+      "light_hm": "3시간 37분",
+      "light_pct": 53,
+      "awake_hours": 0.07,
+      "awake_hm": "0시간 4분",
+      "efficiency": 98,
+      "exponential_debt_hours": 3.01,
+      "exponential_debt_hm": "3시간 1분",
+      "daily_balance_hours": -1.17,
+      "daily_balance_hm": "-1시간 10분",
+      "condition_score": 86,
+      "device": "Google Fitbit Air"
     }
   ],
   "activity": {
@@ -3022,5 +2992,5 @@
     "strain_target": "14.0 ~ 17.0 (고강도 운동 가능)",
     "strain_rec": "신체 회복도가 훌륭합니다. 인터벌 러닝이나 고중량 근력 운동으로 심폐와 근력을 한계까지 자극해도 무리가 없습니다."
   },
-  "ai_briefing": "☀️ [굿모닝 수면 & 바이탈 리포트]\n• 오늘 수면: 7시간 34분 (효율 97% / 깊은+렘수면 53% 최상)\n• 수면 부채: 3시간 8분 🟡 (14일 누적 주의)\n• 신체 회복도: 89점 🐺 (고강도 운동 추천, 목표 부하 14.0~17.0)\n💡 뇌·근육 회복은 완벽하나 부채로 인해 14시경 졸릴 수 있으니 10분 햇빛 산책을 해주세요!\n자세한 인터랙티브 하이프노그램과 누적 차트는 아래 버튼을 눌러 확인하세요!"
+  "ai_briefing": "☀️ [굿모닝 수면 & 바이탈 리포트]\n🐺 늑대형 파트너님, 98%의 고효율 수면으로 개운하게 깨어나셨나요?\n\n• 수면 시간: 6시간 50분 (목표 대비 -1h 10m, 고밀도 수면)\n• 신체 회복도: 86점 최상 (고강도 트레이닝 가능 부하 14.0~17.0)\n• 누적 수면부채: 3시간 1분 🟡 (주의: 오후 슬럼프 가능성)\n\n💡 뇌·근육 회복은 완벽해 운동하기 좋으나, 부채로 인한 식곤증 예방을 위해 오후 2시엔 15분 파워냅을 추천해요!\n자세한 인터랙티브 하이프노그램과 누적 차트는 아래 버튼을 눌러 확인하세요!"
 }
