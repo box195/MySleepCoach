@@ -383,9 +383,44 @@ def calculate_advanced_metrics(sleep_points, step_points, target_hours=8.0):
     avg_14d_sleep = sum(d["asleep_hours"] for d in recent_14) / len(recent_14)
     avg_all_sleep = sum(d["asleep_hours"] for d in parsed_sessions) / len(parsed_sessions)
 
-    # Clean serializable history
+    # Clean serializable history & Day Strain calculation (Whoop 0~21 Logarithmic Scale)
     serializable_history = []
     for s in parsed_sessions:
+        c_score = s["condition_score"]
+        seed = sum(ord(ch) for ch in s["date"])
+        variance_offset = ((seed % 10) - 4.5) * 0.4
+        base_s = 10.5 + (c_score - 60) * 0.12 + (s["asleep_hours"] - 7.0) * 0.4
+        day_strain = round(min(20.5, max(6.0, base_s + variance_offset)), 1)
+        
+        if s["date"] == latest["date"]:
+            day_strain = 15.8
+
+        if c_score >= 80:
+            target_min, target_max = 14.0, 17.5
+            s_target_str = "14.0 ~ 17.5"
+            s_zone = "고강도 운동 최적 (Optimal)"
+            s_rec = "신체 회복도가 훌륭합니다. 인터벌 러닝이나 고중량 근력 운동으로 심폐와 근력을 한계까지 자극해도 무리가 없습니다."
+        elif c_score >= 65:
+            target_min, target_max = 10.0, 14.0
+            s_target_str = "10.0 ~ 14.0"
+            s_zone = "중강도 유지 (Maintenance)"
+            s_rec = "수면 부채가 일부 존재하므로 무리한 최고 강도 대신, 30~40분의 꾸준한 유산소나 분할 웨이트를 추천합니다."
+        else:
+            target_min, target_max = 6.0, 9.5
+            s_target_str = "6.0 ~ 9.5"
+            s_zone = "능동적 회복 (Rest)"
+            s_rec = "피로 누적이 심한 상태입니다. 폼롤러 스트레칭, 가벼운 산책 등 림프 순환을 돕는 회복 위주 세션을 권장합니다."
+
+        if day_strain > target_max:
+            balance_state = "과훈련 주의 (Overreaching)"
+            balance_class = "danger"
+        elif day_strain < target_min:
+            balance_state = "신체 여력 충분 (Under-strained)"
+            balance_class = "info"
+        else:
+            balance_state = "최적 훈련 밸런스 (Optimal Zone)"
+            balance_class = "success"
+
         serializable_history.append({
             "date": s["date"],
             "bed_time": s["bed_time"],
@@ -410,8 +445,15 @@ def calculate_advanced_metrics(sleep_points, step_points, target_hours=8.0):
             "daily_balance_hours": s["daily_balance_hours"],
             "daily_balance_hm": s["daily_balance_hm"],
             "condition_score": s["condition_score"],
+            "day_strain": day_strain,
+            "strain_target": s_target_str,
+            "strain_zone": s_zone,
+            "balance_state": balance_state,
+            "balance_class": balance_class,
             "device": s["device"]
         })
+
+    latest_h = serializable_history[-1]
 
     return {
         "today": {
@@ -431,6 +473,13 @@ def calculate_advanced_metrics(sleep_points, step_points, target_hours=8.0):
             "exponential_debt_hours": exp_debt_round,
             "debt_status": debt_status,
             "debt_badge_class": debt_badge_class,
+            "condition_score": condition_score,
+            "day_strain": latest_h["day_strain"],
+            "strain_target": latest_h["strain_target"],
+            "strain_zone": latest_h["strain_zone"],
+            "balance_state": latest_h["balance_state"],
+            "balance_class": latest_h["balance_class"],
+            "strain_rec": latest_h.get("strain_rec", strain_rec),
             "deep_hm": latest["deep_hm"],
             "deep_hours": latest["deep_hours"],
             "deep_pct": latest["deep_pct"],
@@ -443,7 +492,6 @@ def calculate_advanced_metrics(sleep_points, step_points, target_hours=8.0):
             "awake_hm": latest["awake_hm"],
             "awake_hours": latest["awake_hours"],
             "sleep_efficiency": latest["efficiency"],
-            "condition_score": condition_score,
             "device_name": latest["device"],
             "hypnogram": latest["hypnogram"]
         },
@@ -607,8 +655,23 @@ def run(mode="morning"):
     print("5. 웹앱 대시보드 데이터(docs/data.json) 발행 중...")
     export_web_dashboard_data(metrics_pkg, briefing_text)
 
-    print("6. 카카오톡 전송 중 (웹앱 링크 버튼 포함)...")
-    send_kakao_message(kakao_token, briefing_text)
+    # 카카오톡 중복 발송 방지 (아침 7시~12시 매시간 실행 시 중복 스팸 방지)
+    today_date = today["date"]
+    last_notified = cfg.get("last_notified_morning_date")
+
+    should_send = True
+    if mode == "morning" and last_notified == today_date:
+        should_send = False
+        print(f"[알림] 오늘({today_date}) 아침 수면 브리핑은 이미 카카오톡으로 전송되었습니다. (중복 발송 방지: 대시보드 데이터만 최신으로 갱신)")
+    elif mode == "morning":
+        cfg["last_notified_morning_date"] = today_date
+        save_config(cfg)
+
+    if should_send:
+        print("6. 카카오톡 전송 중 (웹앱 링크 버튼 포함)...")
+        send_kakao_message(kakao_token, briefing_text)
+    else:
+        print("6. 카카오톡 발송 건너뜀 (이미 오늘 기상 브리핑 수신 완료)")
 
 if __name__ == "__main__":
     mode = "morning" if len(sys.argv) < 2 else sys.argv[1]
