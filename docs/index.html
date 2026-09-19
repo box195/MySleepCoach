@@ -125,8 +125,42 @@
           </div>
           <div class="metric-value font-heading" id="quick-strain-val">15.8</div>
           <div class="metric-sub">
-            <span class="badge-tag info">Whoop Strain</span>
+            <span class="badge-tag info" id="quick-strain-target-badge">타깃 14.0~17.5</span>
           </div>
+        </div>
+      </section>
+
+      <!-- Whoop Recovery vs Day Strain Balance Card -->
+      <section class="glass-card strain-balance-card">
+        <div class="section-title">
+          <span>신체 회복도 vs 일일 부하 밸런스</span>
+          <span class="badge-tag success" id="today-balance-status-badge">최적 훈련 밸런스</span>
+        </div>
+
+        <div class="balance-bars-wrapper">
+          <div class="balance-row">
+            <div class="balance-label-col">
+              <span class="lbl">신체 회복도 (충전량)</span>
+              <span class="val font-heading" style="color: var(--accent-emerald);" id="balance-recovery-val">86%</span>
+            </div>
+            <div class="balance-track">
+              <div class="balance-fill recovery" id="balance-recovery-bar" style="width: 86%;"></div>
+            </div>
+          </div>
+
+          <div class="balance-row">
+            <div class="balance-label-col">
+              <span class="lbl">일일 신체 부하 (소모량)</span>
+              <span class="val font-heading" style="color: var(--accent-purple);" id="balance-strain-val">15.8 / 21</span>
+            </div>
+            <div class="balance-track">
+              <div class="balance-fill strain" id="balance-strain-bar" style="width: 75.2%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="balance-advice-box" id="balance-advice-text">
+          충전된 신체 회복도(86%)에 딱 맞는 고강도 타깃 부하(14.0~17.5)를 소화하고 있어 오버트레이닝 없이 심폐와 근력이 성장하는 최적 상태입니다.
         </div>
       </section>
 
@@ -312,26 +346,32 @@
         <button class="filter-pill" data-period="7">최근 7일</button>
         <button class="filter-pill active" data-period="14">최근 14일</button>
         <button class="filter-pill" data-period="30">최근 30일</button>
-        <button class="filter-pill" data-period="all">전체 (104일)</button>
+        <button class="filter-pill" data-period="all">전체 기록</button>
+      </section>
+
+      <!-- Metric Mode Switcher (Sleep vs Strain) -->
+      <section class="metric-mode-group">
+        <button class="mode-btn active" id="btn-mode-sleep" data-mode="sleep">💤 수면 & 부채 분석</button>
+        <button class="mode-btn" id="btn-mode-strain" data-mode="strain">🔥 회복도 vs 신체부하 (Whoop)</button>
       </section>
 
       <!-- Period Summary Aggregate Card -->
       <section class="glass-card summary-aggregate">
         <div class="agg-grid">
           <div class="agg-item">
-            <div class="agg-label">선택 기간 일평균 수면</div>
+            <div class="agg-label" id="agg-lbl-1">선택 기간 일평균 수면</div>
             <div class="agg-val font-heading" id="agg-avg-sleep">0시간 0분</div>
           </div>
           <div class="agg-item">
-            <div class="agg-label">목표(8h) 충족일 비율</div>
+            <div class="agg-label" id="agg-lbl-2">목표(8h) 충족일 비율</div>
             <div class="agg-val font-heading" style="color: var(--accent-emerald);" id="agg-target-met-pct">0%</div>
           </div>
           <div class="agg-item">
-            <div class="agg-label">평균 취침 시각</div>
+            <div class="agg-label" id="agg-lbl-3">평균 취침 시각</div>
             <div class="agg-val font-heading" id="agg-avg-bedtime">00:00</div>
           </div>
           <div class="agg-item">
-            <div class="agg-label">평균 기상 시각</div>
+            <div class="agg-label" id="agg-lbl-4">평균 기상 시각</div>
             <div class="agg-val font-heading" id="agg-avg-waketime">00:00</div>
           </div>
         </div>
@@ -397,6 +437,7 @@
                 <th>효율</th>
                 <th>수면부채</th>
                 <th>회복도</th>
+                <th>신체부하</th>
               </tr>
             </thead>
             <tbody id="history-table-body">
@@ -483,6 +524,18 @@
         <div class="formula-box">
           Effective Sleep = Actual Sleep × (Efficiency / 100) ×<br>
           [ 1.0 + 0.25 × (Deep/Total) + 0.15 × (REM/Total) - 0.20 × (Awake/BedTime) ]
+        </div>
+
+        <h3 style="font-size: 16px; font-weight: 700; margin: 18px 0 10px;">🔥 Whoop 일일 신체부하(Day Strain 0~21)와 회복도 밸런스</h3>
+        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+          <strong>신체 회복도 (Recovery 0~100%)</strong>는 어젯밤 수면으로 채워진 내 몸의 배터리 잔량이며, <strong>일일 신체 부하 (Day Strain 0~21)</strong>는 오늘 하루 심폐와 근육에 가해진 총 스트레스 소모량입니다.
+        </p>
+        <div class="formula-box">
+          • 0.0 ~ 9.9 : 가벼운 일상 / 능동적 회복 (Light)<br>
+          • 10.0 ~ 13.9 : 적정 일상 / 기초 체력 유지 (Moderate)<br>
+          • 14.0 ~ 17.9 : 고강도 운동 / 심폐 및 근력 강화 (Strenuous)<br>
+          • 18.0 ~ 21.0 : 한계 돌파 / 극한 피로 유발 (All-out)<br>
+          *회복도가 80% 이상일 때 고강도(14.0+)를 주는 것이 오버트레이닝 없이 체력을 키우는 최적의 공식입니다.
         </div>
       </section>
 
