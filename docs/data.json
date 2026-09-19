@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-19 09:11:05",
+  "updated_at": "2026-09-19 09:19:31",
   "today": {
     "date": "2026-09-19",
     "bed_time": "01:46",
@@ -17,6 +17,13 @@
     "exponential_debt_hours": 3.01,
     "debt_status": "🟡 주의 (오후 슬럼프 주의)",
     "debt_badge_class": "warning",
+    "condition_score": 86,
+    "day_strain": 15.8,
+    "strain_target": "14.0 ~ 17.5",
+    "strain_zone": "고강도 운동 최적 (Optimal)",
+    "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+    "balance_class": "success",
+    "strain_rec": "신체 회복도가 훌륭합니다. 인터벌 러닝이나 고중량 근력 운동으로 심폐와 근력을 한계까지 자극해도 무리가 없습니다.",
     "deep_hm": "1시간 25분",
     "deep_hours": 1.42,
     "deep_pct": 21,
@@ -29,7 +36,6 @@
     "awake_hm": "0시간 4분",
     "awake_hours": 0.07,
     "sleep_efficiency": 98,
-    "condition_score": 86,
     "device_name": "Google Fitbit Air",
     "hypnogram": [
       {
@@ -276,6 +282,11 @@
       "daily_balance_hours": -2.24,
       "daily_balance_hm": "-2시간 14분",
       "condition_score": 78,
+      "day_strain": 13.6,
+      "strain_target": "10.0 ~ 14.0",
+      "strain_zone": "중강도 유지 (Maintenance)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -302,6 +313,11 @@
       "daily_balance_hours": -0.61,
       "daily_balance_hm": "-0시간 37분",
       "condition_score": 93,
+      "day_strain": 16.4,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -328,6 +344,11 @@
       "daily_balance_hours": -1.14,
       "daily_balance_hm": "-1시간 8분",
       "condition_score": 91,
+      "day_strain": 12.8,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -354,6 +375,11 @@
       "daily_balance_hours": -1.24,
       "daily_balance_hm": "-1시간 14분",
       "condition_score": 87,
+      "day_strain": 12.6,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -380,6 +406,11 @@
       "daily_balance_hours": -0.97,
       "daily_balance_hm": "-0시간 58분",
       "condition_score": 89,
+      "day_strain": 13.4,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -406,6 +437,11 @@
       "daily_balance_hours": 0.55,
       "daily_balance_hm": "+0시간 33분",
       "condition_score": 96,
+      "day_strain": 15.2,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -432,6 +468,11 @@
       "daily_balance_hours": 2.05,
       "daily_balance_hm": "+2시간 3분",
       "condition_score": 90,
+      "day_strain": 15.5,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -458,6 +499,11 @@
       "daily_balance_hours": -1.71,
       "daily_balance_hm": "-1시간 43분",
       "condition_score": 76,
+      "day_strain": 12.7,
+      "strain_target": "10.0 ~ 14.0",
+      "strain_zone": "중강도 유지 (Maintenance)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -484,6 +530,11 @@
       "daily_balance_hours": -0.8,
       "daily_balance_hm": "-0시간 48분",
       "condition_score": 85,
+      "day_strain": 14.6,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -510,6 +561,11 @@
       "daily_balance_hours": -0.67,
       "daily_balance_hm": "-0시간 40분",
       "condition_score": 85,
+      "day_strain": 15.0,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -536,6 +592,11 @@
       "daily_balance_hours": -1.33,
       "daily_balance_hm": "-1시간 20분",
       "condition_score": 89,
+      "day_strain": 15.6,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -562,6 +623,11 @@
       "daily_balance_hours": -0.42,
       "daily_balance_hm": "-0시간 25분",
       "condition_score": 89,
+      "day_strain": 12.4,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -588,6 +654,11 @@
       "daily_balance_hours": -2.03,
       "daily_balance_hm": "-2시간 2분",
       "condition_score": 69,
+      "day_strain": 10.2,
+      "strain_target": "10.0 ~ 14.0",
+      "strain_zone": "중강도 유지 (Maintenance)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -614,6 +685,11 @@
       "daily_balance_hours": 1.55,
       "daily_balance_hm": "+1시간 33분",
       "condition_score": 93,
+      "day_strain": 14.9,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -640,6 +716,11 @@
       "daily_balance_hours": -1.3,
       "daily_balance_hm": "-1시간 18분",
       "condition_score": 86,
+      "day_strain": 13.3,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -666,6 +747,11 @@
       "daily_balance_hours": -0.67,
       "daily_balance_hm": "-0시간 40분",
       "condition_score": 91,
+      "day_strain": 14.6,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -692,6 +778,11 @@
       "daily_balance_hours": -1.17,
       "daily_balance_hm": "-1시간 10분",
       "condition_score": 86,
+      "day_strain": 14.2,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -718,6 +809,11 @@
       "daily_balance_hours": -1.55,
       "daily_balance_hm": "-1시간 33분",
       "condition_score": 85,
+      "day_strain": 14.3,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -744,6 +840,11 @@
       "daily_balance_hours": -0.49,
       "daily_balance_hm": "-0시간 29분",
       "condition_score": 91,
+      "day_strain": 15.8,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -770,6 +871,11 @@
       "daily_balance_hours": 1.47,
       "daily_balance_hm": "+1시간 28분",
       "condition_score": 94,
+      "day_strain": 17.4,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -796,6 +902,11 @@
       "daily_balance_hours": -0.8,
       "daily_balance_hm": "-0시간 48분",
       "condition_score": 89,
+      "day_strain": 12.3,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -822,6 +933,11 @@
       "daily_balance_hours": -1.0,
       "daily_balance_hm": "-1시간 0분",
       "condition_score": 84,
+      "day_strain": 12.0,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -848,6 +964,11 @@
       "daily_balance_hours": -0.53,
       "daily_balance_hm": "-0시간 32분",
       "condition_score": 86,
+      "day_strain": 13.2,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -874,6 +995,11 @@
       "daily_balance_hours": -6.68,
       "daily_balance_hm": "-6시간 41분",
       "condition_score": 54,
+      "day_strain": 6.5,
+      "strain_target": "6.0 ~ 9.5",
+      "strain_zone": "능동적 회복 (Rest)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -900,6 +1026,11 @@
       "daily_balance_hours": -4.7,
       "daily_balance_hm": "-4시간 42분",
       "condition_score": 60,
+      "day_strain": 8.0,
+      "strain_target": "6.0 ~ 9.5",
+      "strain_zone": "능동적 회복 (Rest)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -926,6 +1057,11 @@
       "daily_balance_hours": -0.21,
       "daily_balance_hm": "-0시간 13분",
       "condition_score": 81,
+      "day_strain": 12.7,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -952,6 +1088,11 @@
       "daily_balance_hours": -0.74,
       "daily_balance_hm": "-0시간 44분",
       "condition_score": 83,
+      "day_strain": 13.2,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -978,6 +1119,11 @@
       "daily_balance_hours": -0.24,
       "daily_balance_hm": "-0시간 14분",
       "condition_score": 88,
+      "day_strain": 14.4,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1004,6 +1150,11 @@
       "daily_balance_hours": -0.41,
       "daily_balance_hm": "-0시간 25분",
       "condition_score": 87,
+      "day_strain": 14.6,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1030,6 +1181,11 @@
       "daily_balance_hours": -0.29,
       "daily_balance_hm": "-0시간 17분",
       "condition_score": 84,
+      "day_strain": 14.7,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1056,6 +1212,11 @@
       "daily_balance_hours": -1.12,
       "daily_balance_hm": "-1시간 7분",
       "condition_score": 87,
+      "day_strain": 15.1,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1082,6 +1243,11 @@
       "daily_balance_hours": -1.73,
       "daily_balance_hm": "-1시간 44분",
       "condition_score": 84,
+      "day_strain": 14.9,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1108,6 +1274,11 @@
       "daily_balance_hours": -0.33,
       "daily_balance_hm": "-0시간 20분",
       "condition_score": 90,
+      "day_strain": 12.6,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -1134,6 +1305,11 @@
       "daily_balance_hours": -0.58,
       "daily_balance_hm": "-0시간 35분",
       "condition_score": 86,
+      "day_strain": 12.8,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -1160,6 +1336,11 @@
       "daily_balance_hours": 0.85,
       "daily_balance_hm": "+0시간 51분",
       "condition_score": 94,
+      "day_strain": 14.7,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1186,6 +1367,11 @@
       "daily_balance_hours": 0.96,
       "daily_balance_hm": "+0시간 58분",
       "condition_score": 89,
+      "day_strain": 14.6,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1212,6 +1398,11 @@
       "daily_balance_hours": -1.47,
       "daily_balance_hm": "-1시간 28분",
       "condition_score": 72,
+      "day_strain": 12.0,
+      "strain_target": "10.0 ~ 14.0",
+      "strain_zone": "중강도 유지 (Maintenance)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1238,6 +1429,11 @@
       "daily_balance_hours": -1.28,
       "daily_balance_hm": "-1시간 17분",
       "condition_score": 85,
+      "day_strain": 14.0,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1264,6 +1460,11 @@
       "daily_balance_hours": -0.28,
       "daily_balance_hm": "-0시간 17분",
       "condition_score": 90,
+      "day_strain": 15.4,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1290,6 +1491,11 @@
       "daily_balance_hours": -1.03,
       "daily_balance_hm": "-1시간 2분",
       "condition_score": 87,
+      "day_strain": 15.1,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1316,6 +1522,11 @@
       "daily_balance_hours": 1.44,
       "daily_balance_hm": "+1시간 26분",
       "condition_score": 94,
+      "day_strain": 17.4,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1342,6 +1553,11 @@
       "daily_balance_hours": 0.71,
       "daily_balance_hm": "+0시간 43분",
       "condition_score": 90,
+      "day_strain": 13.0,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -1368,6 +1584,11 @@
       "daily_balance_hours": 1.12,
       "daily_balance_hm": "+1시간 7분",
       "condition_score": 91,
+      "day_strain": 13.7,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -1394,6 +1615,11 @@
       "daily_balance_hours": -1.06,
       "daily_balance_hm": "-1시간 4분",
       "condition_score": 78,
+      "day_strain": 12.0,
+      "strain_target": "10.0 ~ 14.0",
+      "strain_zone": "중강도 유지 (Maintenance)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1420,6 +1646,11 @@
       "daily_balance_hours": -0.47,
       "daily_balance_hm": "-0시간 28분",
       "condition_score": 87,
+      "day_strain": 13.8,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -1446,6 +1677,11 @@
       "daily_balance_hours": -2.01,
       "daily_balance_hm": "-2시간 1분",
       "condition_score": 79,
+      "day_strain": 12.6,
+      "strain_target": "10.0 ~ 14.0",
+      "strain_zone": "중강도 유지 (Maintenance)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1472,6 +1708,11 @@
       "daily_balance_hours": -0.29,
       "daily_balance_hm": "-0시간 17분",
       "condition_score": 94,
+      "day_strain": 15.5,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1498,6 +1739,11 @@
       "daily_balance_hours": -1.33,
       "daily_balance_hm": "-1시간 20분",
       "condition_score": 79,
+      "day_strain": 13.6,
+      "strain_target": "10.0 ~ 14.0",
+      "strain_zone": "중강도 유지 (Maintenance)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1524,6 +1770,11 @@
       "daily_balance_hours": 1.5,
       "daily_balance_hm": "+1시간 30분",
       "condition_score": 95,
+      "day_strain": 17.1,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1550,6 +1801,11 @@
       "daily_balance_hours": 0.27,
       "daily_balance_hm": "+0시간 16분",
       "condition_score": 93,
+      "day_strain": 16.8,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1576,6 +1832,11 @@
       "daily_balance_hours": -1.18,
       "daily_balance_hm": "-1시간 11분",
       "condition_score": 81,
+      "day_strain": 11.1,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -1602,6 +1863,11 @@
       "daily_balance_hours": -0.52,
       "daily_balance_hm": "-0시간 31분",
       "condition_score": 93,
+      "day_strain": 13.3,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -1628,6 +1894,11 @@
       "daily_balance_hours": 0.03,
       "daily_balance_hm": "+0시간 2분",
       "condition_score": 88,
+      "day_strain": 13.3,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -1654,6 +1925,11 @@
       "daily_balance_hours": -0.08,
       "daily_balance_hm": "-0시간 5분",
       "condition_score": 93,
+      "day_strain": 14.6,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1680,6 +1956,11 @@
       "daily_balance_hours": -1.11,
       "daily_balance_hm": "-1시간 7분",
       "condition_score": 89,
+      "day_strain": 14.1,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1706,6 +1987,11 @@
       "daily_balance_hours": 2.9,
       "daily_balance_hm": "+2시간 54분",
       "condition_score": 95,
+      "day_strain": 15.7,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1732,6 +2018,11 @@
       "daily_balance_hours": -0.88,
       "daily_balance_hm": "-0시간 53분",
       "condition_score": 82,
+      "day_strain": 13.0,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -1758,6 +2049,11 @@
       "daily_balance_hours": -0.22,
       "daily_balance_hm": "-0시간 13분",
       "condition_score": 95,
+      "day_strain": 15.2,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1784,6 +2080,11 @@
       "daily_balance_hours": -0.83,
       "daily_balance_hm": "-0시간 50분",
       "condition_score": 83,
+      "day_strain": 13.9,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -1810,6 +2111,11 @@
       "daily_balance_hours": -1.07,
       "daily_balance_hm": "-1시간 4분",
       "condition_score": 87,
+      "day_strain": 14.7,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1836,6 +2142,11 @@
       "daily_balance_hours": -1.53,
       "daily_balance_hm": "-1시간 32분",
       "condition_score": 88,
+      "day_strain": 15.0,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1862,6 +2173,11 @@
       "daily_balance_hours": -0.7,
       "daily_balance_hm": "-0시간 42분",
       "condition_score": 89,
+      "day_strain": 15.9,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1888,6 +2204,11 @@
       "daily_balance_hours": 0.65,
       "daily_balance_hm": "+0시간 39분",
       "condition_score": 95,
+      "day_strain": 13.6,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -1914,6 +2235,11 @@
       "daily_balance_hours": -0.12,
       "daily_balance_hm": "-0시간 7분",
       "condition_score": 96,
+      "day_strain": 13.8,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -1940,6 +2266,11 @@
       "daily_balance_hours": -1.48,
       "daily_balance_hm": "-1시간 29분",
       "condition_score": 77,
+      "day_strain": 11.7,
+      "strain_target": "10.0 ~ 14.0",
+      "strain_zone": "중강도 유지 (Maintenance)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1966,6 +2297,11 @@
       "daily_balance_hours": 0.3,
       "daily_balance_hm": "+0시간 18분",
       "condition_score": 93,
+      "day_strain": 14.8,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -1992,6 +2328,11 @@
       "daily_balance_hours": 0.12,
       "daily_balance_hm": "+0시간 7분",
       "condition_score": 92,
+      "day_strain": 15.0,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2018,6 +2359,11 @@
       "daily_balance_hours": -0.68,
       "daily_balance_hm": "-0시간 41분",
       "condition_score": 89,
+      "day_strain": 14.7,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2044,6 +2390,11 @@
       "daily_balance_hours": 0.07,
       "daily_balance_hm": "+0시간 4분",
       "condition_score": 95,
+      "day_strain": 16.1,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2070,6 +2421,11 @@
       "daily_balance_hours": 1.43,
       "daily_balance_hm": "+1시간 26분",
       "condition_score": 94,
+      "day_strain": 17.0,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2096,6 +2452,11 @@
       "daily_balance_hours": -0.23,
       "daily_balance_hm": "-0시간 14분",
       "condition_score": 95,
+      "day_strain": 16.8,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2122,6 +2483,11 @@
       "daily_balance_hours": 1.49,
       "daily_balance_hm": "+1시간 29분",
       "condition_score": 94,
+      "day_strain": 13.8,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -2148,6 +2514,11 @@
       "daily_balance_hours": -0.63,
       "daily_balance_hm": "-0시간 38분",
       "condition_score": 85,
+      "day_strain": 12.2,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -2174,6 +2545,11 @@
       "daily_balance_hours": -0.32,
       "daily_balance_hm": "-0시간 19분",
       "condition_score": 91,
+      "day_strain": 13.5,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -2200,6 +2576,11 @@
       "daily_balance_hours": -1.88,
       "daily_balance_hm": "-1시간 53분",
       "condition_score": 82,
+      "day_strain": 12.6,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -2226,6 +2607,11 @@
       "daily_balance_hours": -0.78,
       "daily_balance_hm": "-0시간 47분",
       "condition_score": 92,
+      "day_strain": 14.6,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2252,6 +2638,11 @@
       "daily_balance_hours": 1.13,
       "daily_balance_hm": "+1시간 8분",
       "condition_score": 96,
+      "day_strain": 16.3,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2278,6 +2669,11 @@
       "daily_balance_hours": 0.48,
       "daily_balance_hm": "+0시간 29분",
       "condition_score": 90,
+      "day_strain": 15.7,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2304,6 +2700,11 @@
       "daily_balance_hours": -1.79,
       "daily_balance_hm": "-1시간 47분",
       "condition_score": 83,
+      "day_strain": 14.3,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2330,6 +2731,11 @@
       "daily_balance_hours": -0.91,
       "daily_balance_hm": "-0시간 55분",
       "condition_score": 86,
+      "day_strain": 15.5,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2356,6 +2762,11 @@
       "daily_balance_hours": -2.07,
       "daily_balance_hm": "-2시간 4분",
       "condition_score": 84,
+      "day_strain": 11.2,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -2382,6 +2793,11 @@
       "daily_balance_hours": -0.02,
       "daily_balance_hm": "-0시간 1분",
       "condition_score": 93,
+      "day_strain": 13.5,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -2408,6 +2824,11 @@
       "daily_balance_hours": -1.97,
       "daily_balance_hm": "-1시간 58분",
       "condition_score": 84,
+      "day_strain": 12.0,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -2434,6 +2855,11 @@
       "daily_balance_hours": -0.42,
       "daily_balance_hm": "-0시간 25분",
       "condition_score": 90,
+      "day_strain": 13.7,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -2460,6 +2886,11 @@
       "daily_balance_hours": 0.93,
       "daily_balance_hm": "+0시간 56분",
       "condition_score": 89,
+      "day_strain": 15.0,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2486,6 +2917,11 @@
       "daily_balance_hours": -1.38,
       "daily_balance_hm": "-1시간 23분",
       "condition_score": 77,
+      "day_strain": 13.0,
+      "strain_target": "10.0 ~ 14.0",
+      "strain_zone": "중강도 유지 (Maintenance)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2512,6 +2948,11 @@
       "daily_balance_hours": -0.67,
       "daily_balance_hm": "-0시간 40분",
       "condition_score": 85,
+      "day_strain": 13.4,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -2538,6 +2979,11 @@
       "daily_balance_hours": -1.77,
       "daily_balance_hm": "-1시간 46분",
       "condition_score": 81,
+      "day_strain": 12.9,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -2564,6 +3010,11 @@
       "daily_balance_hours": -1.28,
       "daily_balance_hm": "-1시간 17분",
       "condition_score": 86,
+      "day_strain": 14.1,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2590,6 +3041,11 @@
       "daily_balance_hours": -1.47,
       "daily_balance_hm": "-1시간 28분",
       "condition_score": 86,
+      "day_strain": 14.4,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2616,6 +3072,11 @@
       "daily_balance_hours": 1.43,
       "daily_balance_hm": "+1시간 26분",
       "condition_score": 94,
+      "day_strain": 17.0,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2642,6 +3103,11 @@
       "daily_balance_hours": 0.65,
       "daily_balance_hm": "+0시간 39분",
       "condition_score": 90,
+      "day_strain": 16.6,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2668,6 +3134,11 @@
       "daily_balance_hours": -2.37,
       "daily_balance_hm": "-2시간 22분",
       "condition_score": 77,
+      "day_strain": 10.2,
+      "strain_target": "10.0 ~ 14.0",
+      "strain_zone": "중강도 유지 (Maintenance)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2694,6 +3165,11 @@
       "daily_balance_hours": -0.26,
       "daily_balance_hm": "-0시간 16분",
       "condition_score": 91,
+      "day_strain": 13.1,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -2720,6 +3196,11 @@
       "daily_balance_hours": -1.84,
       "daily_balance_hm": "-1시간 50분",
       "condition_score": 78,
+      "day_strain": 11.3,
+      "strain_target": "10.0 ~ 14.0",
+      "strain_zone": "중강도 유지 (Maintenance)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2746,6 +3227,11 @@
       "daily_balance_hours": -0.03,
       "daily_balance_hm": "-0시간 2분",
       "condition_score": 94,
+      "day_strain": 14.8,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2772,6 +3258,11 @@
       "daily_balance_hours": -2.02,
       "daily_balance_hm": "-2시간 1분",
       "condition_score": 82,
+      "day_strain": 12.9,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -2798,6 +3289,11 @@
       "daily_balance_hours": -1.08,
       "daily_balance_hm": "-1시간 5분",
       "condition_score": 88,
+      "day_strain": 14.4,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2824,6 +3320,11 @@
       "daily_balance_hours": 2.45,
       "daily_balance_hm": "+2시간 27분",
       "condition_score": 94,
+      "day_strain": 17.0,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2850,6 +3351,11 @@
       "daily_balance_hours": -2.34,
       "daily_balance_hm": "-2시간 20분",
       "condition_score": 75,
+      "day_strain": 13.2,
+      "strain_target": "10.0 ~ 14.0",
+      "strain_zone": "중강도 유지 (Maintenance)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2876,6 +3382,11 @@
       "daily_balance_hours": 0.04,
       "daily_balance_hm": "+0시간 2분",
       "condition_score": 91,
+      "day_strain": 16.4,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2902,6 +3413,11 @@
       "daily_balance_hours": -0.3,
       "daily_balance_hm": "-0시간 18분",
       "condition_score": 89,
+      "day_strain": 12.5,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -2928,6 +3444,11 @@
       "daily_balance_hours": -3.82,
       "daily_balance_hm": "-3시간 49분",
       "condition_score": 64,
+      "day_strain": 8.5,
+      "strain_target": "6.0 ~ 9.5",
+      "strain_zone": "능동적 회복 (Rest)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     },
     {
@@ -2954,6 +3475,11 @@
       "daily_balance_hours": -0.44,
       "daily_balance_hm": "-0시간 26분",
       "condition_score": 89,
+      "day_strain": 13.2,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "신체 여력 충분 (Under-strained)",
+      "balance_class": "info",
       "device": "Google Fitbit Air"
     },
     {
@@ -2980,6 +3506,11 @@
       "daily_balance_hours": -1.17,
       "daily_balance_hm": "-1시간 10분",
       "condition_score": 86,
+      "day_strain": 15.8,
+      "strain_target": "14.0 ~ 17.5",
+      "strain_zone": "고강도 운동 최적 (Optimal)",
+      "balance_state": "최적 훈련 밸런스 (Optimal Zone)",
+      "balance_class": "success",
       "device": "Google Fitbit Air"
     }
   ],
@@ -2992,5 +3523,5 @@
     "strain_target": "14.0 ~ 17.0 (고강도 운동 가능)",
     "strain_rec": "신체 회복도가 훌륭합니다. 인터벌 러닝이나 고중량 근력 운동으로 심폐와 근력을 한계까지 자극해도 무리가 없습니다."
   },
-  "ai_briefing": "☀️ [굿모닝 수면 & 바이탈 리포트]\n🐺 늑대형 파트너님, 98%의 고효율 수면으로 개운하게 깨어나셨나요?\n\n• 수면 시간: 6시간 50분 (목표 대비 -1h 10m, 고밀도 수면)\n• 신체 회복도: 86점 최상 (고강도 트레이닝 가능 부하 14.0~17.0)\n• 누적 수면부채: 3시간 1분 🟡 (주의: 오후 슬럼프 가능성)\n\n💡 뇌·근육 회복은 완벽해 운동하기 좋으나, 부채로 인한 식곤증 예방을 위해 오후 2시엔 15분 파워냅을 추천해요!\n자세한 인터랙티브 하이프노그램과 누적 차트는 아래 버튼을 눌러 확인하세요!"
+  "ai_briefing": "☀️ [굿모닝 바이탈 & 수면 리포트]\n\n밤의 늑대 🐺님, 수면 효율 98%로 신체 배터리가 완벽히 채워졌습니다!\n• 수면 시간: 6시간 50분 (기준치 대비 -1시간 10분)\n• 누적 수면부채: 3시간 1분 🟡 (오후 슬럼프 주의)\n• 신체 회복도: 86점 (고강도 운동 부하 14.0~17.0 권장)\n근육 회복은 최상이지만 뇌 피로가 남아있으니, 오후 2시경 가벼운 산책이나 15분 파워냅을 챙기세요.\n\n자세한 인터랙티브 하이프노그램과 누적 차트는 아래 버튼을 눌러 확인하세요!"
 }
