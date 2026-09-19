@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let appData = null;
   let currentPeriod = 14;
   let currentTargetHours = 8.0;
+  let currentMetricMode = 'sleep';
 
   // 1. Fetch data.json
   fetch('data.json')
@@ -117,9 +118,35 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('quick-eff-val').textContent = `${today.sleep_efficiency}%`;
     document.getElementById('quick-sleep-window').textContent = `${today.bed_time} ~ ${today.wake_time}`;
 
-    if (data.activity && data.activity.strain_score) {
-      document.getElementById('quick-strain-val').textContent = data.activity.strain_score;
+    // Day Strain & Whoop Balance Card
+    const strainVal = (today.day_strain !== undefined) ? today.day_strain : 15.8;
+    const targetStr = today.strain_target || '14.0~17.5';
+    const balanceState = today.balance_state || '최적 훈련 밸런스';
+    const balanceClass = today.balance_class || 'success';
+    const strainRec = today.strain_rec || '신체 회복도와 부하 밸런스가 조화롭습니다.';
+
+    const quickStrainValEl = document.getElementById('quick-strain-val');
+    if (quickStrainValEl) quickStrainValEl.textContent = strainVal.toFixed(1);
+    const quickStrainTargetBadge = document.getElementById('quick-strain-target-badge');
+    if (quickStrainTargetBadge) quickStrainTargetBadge.textContent = `타깃 ${targetStr}`;
+
+    const balanceBadge = document.getElementById('today-balance-status-badge');
+    if (balanceBadge) {
+      balanceBadge.className = `badge-tag ${balanceClass}`;
+      balanceBadge.textContent = balanceState.split(' (')[0];
     }
+    const recValEl = document.getElementById('balance-recovery-val');
+    if (recValEl) recValEl.textContent = `${score}%`;
+    const recBarEl = document.getElementById('balance-recovery-bar');
+    if (recBarEl) recBarEl.style.width = `${score}%`;
+
+    const strainValEl = document.getElementById('balance-strain-val');
+    if (strainValEl) strainValEl.textContent = `${strainVal.toFixed(1)} / 21`;
+    const strainBarEl = document.getElementById('balance-strain-bar');
+    if (strainBarEl) strainBarEl.style.width = `${Math.min(100, (strainVal / 21) * 100)}%`;
+
+    const adviceEl = document.getElementById('balance-advice-text');
+    if (adviceEl) adviceEl.textContent = strainRec;
 
     // Sleep Stage Bar
     document.getElementById('quick-seg-deep').style.width = `${today.deep_pct}%`;
@@ -344,6 +371,24 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+    // Metric Mode Buttons (Sleep vs Strain)
+    const btnSleep = document.getElementById('btn-mode-sleep');
+    const btnStrain = document.getElementById('btn-mode-strain');
+    if (btnSleep && btnStrain) {
+      btnSleep.addEventListener('click', () => {
+        currentMetricMode = 'sleep';
+        btnSleep.classList.add('active');
+        btnStrain.classList.remove('active');
+        renderTrends(history, currentPeriod);
+      });
+      btnStrain.addEventListener('click', () => {
+        currentMetricMode = 'strain';
+        btnStrain.classList.add('active');
+        btnSleep.classList.remove('active');
+        renderTrends(history, currentPeriod);
+      });
+    }
+
     // History table accordion toggle
     const toggleBtn = document.getElementById('toggle-history-btn');
     const tableWrapper = document.getElementById('history-table-wrapper');
@@ -368,97 +413,192 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!history || !history.length) return;
 
     let slice = [];
+    let periodLabel = '';
     if (period === 'all') {
       slice = history;
-      document.getElementById('trend-chart-title').textContent = `전체 (${history.length}일) 수면 트렌드 & 부채 추이`;
+      periodLabel = `전체 (${history.length}일)`;
     } else {
       slice = history.slice(-period);
-      document.getElementById('trend-chart-title').textContent = `최근 ${period}일 수면 트렌드 & 부채 추이`;
+      periodLabel = `최근 ${period}일`;
     }
 
-    // Aggregate calculations
     const totalDays = slice.length;
-    const avgSleep = slice.reduce((acc, d) => acc + d.asleep_hours, 0) / totalDays;
-    const targetMetCount = slice.filter(d => d.asleep_hours >= currentTargetHours).length;
-    const targetMetPct = Math.round((targetMetCount / totalDays) * 100);
-
-    document.getElementById('agg-avg-sleep').textContent = toHm(avgSleep);
-    document.getElementById('agg-target-met-pct').textContent = `${targetMetPct}% (${targetMetCount}/${totalDays}일)`;
-
-    // Average bedtime & waketime
-    let totalBedM = 0;
-    let totalWakeM = 0;
-    slice.forEach(d => {
-      const [bh, bm] = d.bed_time.split(':').map(Number);
-      const [wh, wm] = d.wake_time.split(':').map(Number);
-      const bMin = (bh < 12 ? bh + 24 : bh) * 60 + bm;
-      totalBedM += bMin;
-      totalWakeM += (wh * 60 + wm);
-    });
-    const avgBedM = Math.round(totalBedM / totalDays) % (24 * 60);
-    const avgWakeM = Math.round(totalWakeM / totalDays);
-
-    document.getElementById('agg-avg-bedtime').textContent = formatMtoHM(avgBedM);
-    document.getElementById('agg-avg-waketime').textContent = formatMtoHM(avgWakeM);
-
-    // Render Bar Chart
     const chartContainer = document.getElementById('trend-bar-chart');
+    const guideWrapper = document.querySelector('.chart-target-guide');
+    const guideSpan = document.querySelector('.chart-target-guide span');
     chartContainer.innerHTML = '';
 
-    const maxChartHours = 11.5;
+    if (currentMetricMode === 'sleep') {
+      // 💤 1. SLEEP & DEBT MODE
+      document.getElementById('trend-chart-title').textContent = `${periodLabel} 수면 트렌드 & 부채 추이`;
+      if (guideSpan) guideSpan.textContent = `목표선 ${currentTargetHours.toFixed(1)}h`;
+      if (guideWrapper) guideWrapper.style.top = `${Math.max(10, Math.min(85, 100 - (currentTargetHours / 11.5) * 100))}%`;
 
-    slice.forEach((day, i) => {
-      const col = document.createElement('div');
-      col.className = 'chart-col';
-      if (i === slice.length - 1) col.classList.add('selected'); // Default select latest
+      const avgSleep = slice.reduce((acc, d) => acc + d.asleep_hours, 0) / totalDays;
+      const targetMetCount = slice.filter(d => d.asleep_hours >= currentTargetHours).length;
+      const targetMetPct = Math.round((targetMetCount / totalDays) * 100);
 
-      const heightPct = Math.min(100, Math.max(8, (day.asleep_hours / maxChartHours) * 100));
+      document.getElementById('agg-lbl-1').textContent = '선택 기간 일평균 수면';
+      const agg1 = document.getElementById('agg-avg-sleep');
+      agg1.textContent = toHm(avgSleep);
+      agg1.style.color = '#FFF';
 
-      let fillClass = '';
-      if (day.asleep_hours >= currentTargetHours) {
-        fillClass = '';
-      } else if (day.asleep_hours >= currentTargetHours - 1.5) {
-        fillClass = 'short';
-      } else {
-        fillClass = 'danger';
-      }
+      document.getElementById('agg-lbl-2').textContent = `목표(${currentTargetHours.toFixed(1)}h) 충족일 비율`;
+      document.getElementById('agg-target-met-pct').textContent = `${targetMetPct}% (${targetMetCount}/${totalDays}일)`;
 
-      // Compact date (e.g. 9/18)
-      const dateParts = day.date.split('-');
-      const shortDate = `${Number(dateParts[1])}/${Number(dateParts[2])}`;
+      // Average bedtime & waketime
+      let totalBedM = 0;
+      let totalWakeM = 0;
+      slice.forEach(d => {
+        const [bh, bm] = d.bed_time.split(':').map(Number);
+        const [wh, wm] = d.wake_time.split(':').map(Number);
+        const bMin = (bh < 12 ? bh + 24 : bh) * 60 + bm;
+        totalBedM += bMin;
+        totalWakeM += (wh * 60 + wm);
+      });
+      const avgBedM = Math.round(totalBedM / totalDays) % (24 * 60);
+      const avgWakeM = Math.round(totalWakeM / totalDays);
 
-      col.innerHTML = `
-        <div class="chart-bar-fill ${fillClass}" style="height: ${heightPct}%;"></div>
-        <span class="chart-col-date">${shortDate}</span>
-      `;
+      document.getElementById('agg-lbl-3').textContent = '평균 취침 시각';
+      document.getElementById('agg-avg-bedtime').textContent = formatMtoHM(avgBedM);
+      document.getElementById('agg-lbl-4').textContent = '평균 기상 시각';
+      document.getElementById('agg-avg-waketime').textContent = formatMtoHM(avgWakeM);
 
-      col.addEventListener('click', () => {
-        chartContainer.querySelectorAll('.chart-col').forEach(c => c.classList.remove('selected'));
-        col.classList.add('selected');
-        updateSelectedDayCard(day);
+      const maxChartHours = 11.5;
+
+      slice.forEach((day, i) => {
+        const col = document.createElement('div');
+        col.className = 'chart-col';
+        if (i === slice.length - 1) col.classList.add('selected');
+
+        const heightPct = Math.min(100, Math.max(8, (day.asleep_hours / maxChartHours) * 100));
+
+        let fillClass = '';
+        if (day.asleep_hours >= currentTargetHours) {
+          fillClass = '';
+        } else if (day.asleep_hours >= currentTargetHours - 1.5) {
+          fillClass = 'short';
+        } else {
+          fillClass = 'danger';
+        }
+
+        const dateParts = day.date.split('-');
+        const shortDate = `${Number(dateParts[1])}/${Number(dateParts[2])}`;
+
+        col.innerHTML = `
+          <div class="chart-bar-fill ${fillClass}" style="height: ${heightPct}%;"></div>
+          <span class="chart-col-date">${shortDate}</span>
+        `;
+
+        col.addEventListener('click', () => {
+          chartContainer.querySelectorAll('.chart-col').forEach(c => c.classList.remove('selected'));
+          col.classList.add('selected');
+          updateSelectedDayCard(day, 'sleep');
+        });
+
+        chartContainer.appendChild(col);
       });
 
-      chartContainer.appendChild(col);
-    });
+      updateSelectedDayCard(slice[slice.length - 1], 'sleep');
 
-    // Update selected card to latest day initially
-    updateSelectedDayCard(slice[slice.length - 1]);
+    } else {
+      // 🔥 2. RECOVERY vs DAY STRAIN (WHOOP) MODE
+      document.getElementById('trend-chart-title').textContent = `${periodLabel} 신체 회복도 vs 부하(Strain) 밸런스 추이`;
+      if (guideSpan) guideSpan.textContent = `고강도 권장 기준 (14.0/21)`;
+      if (guideWrapper) guideWrapper.style.top = `${Math.round((1 - 14.0 / 21.0) * 100)}%`;
+
+      const avgStrain = slice.reduce((acc, d) => acc + (d.day_strain || 14.0), 0) / totalDays;
+      const optimalCount = slice.filter(d => (d.balance_class === 'success') || (d.balance_state && d.balance_state.includes('최적'))).length;
+      const optimalPct = Math.round((optimalCount / totalDays) * 100);
+
+      // Find max strain day
+      let maxDay = slice[0];
+      slice.forEach(d => {
+        if ((d.day_strain || 0) > (maxDay.day_strain || 0)) maxDay = d;
+      });
+
+      const avgRecovery = Math.round(slice.reduce((acc, d) => acc + (d.condition_score || 70), 0) / totalDays);
+
+      document.getElementById('agg-lbl-1').textContent = '선택 기간 평균 신체부하';
+      const agg1 = document.getElementById('agg-avg-sleep');
+      agg1.textContent = `${avgStrain.toFixed(1)} / 21.0`;
+      agg1.style.color = '#C084FC';
+
+      document.getElementById('agg-lbl-2').textContent = '최적 밸런스 달성률';
+      document.getElementById('agg-target-met-pct').textContent = `${optimalPct}% (${optimalCount}/${totalDays}일)`;
+
+      document.getElementById('agg-lbl-3').textContent = '기간 최고 부하일';
+      const maxDateParts = maxDay.date.split('-');
+      document.getElementById('agg-avg-bedtime').textContent = `${Number(maxDateParts[1])}/${Number(maxDateParts[2])} (${(maxDay.day_strain || 14).toFixed(1)})`;
+
+      document.getElementById('agg-lbl-4').textContent = '평균 회복도 점수';
+      document.getElementById('agg-avg-waketime').textContent = `${avgRecovery}점`;
+
+      slice.forEach((day, i) => {
+        const col = document.createElement('div');
+        col.className = 'chart-col';
+        if (i === slice.length - 1) col.classList.add('selected');
+
+        const strainVal = day.day_strain || 14.0;
+        const heightPct = Math.min(100, Math.max(10, (strainVal / 21.0) * 100));
+
+        // Recovery dot position (bottom % based on condition_score 0~100)
+        const recScore = day.condition_score || 75;
+        const dotBottom = Math.max(8, Math.min(92, recScore));
+        const dotClass = recScore >= 80 ? 'recovery-high' : (recScore >= 65 ? 'recovery-mid' : 'recovery-low');
+
+        const dateParts = day.date.split('-');
+        const shortDate = `${Number(dateParts[1])}/${Number(dateParts[2])}`;
+
+        col.innerHTML = `
+          <div class="chart-bar-fill strain-bar" style="height: ${heightPct}%;"></div>
+          <div class="chart-col-dot ${dotClass}" style="bottom: ${dotBottom}%;" title="회복도 ${recScore}점"></div>
+          <span class="chart-col-date">${shortDate}</span>
+        `;
+
+        col.addEventListener('click', () => {
+          chartContainer.querySelectorAll('.chart-col').forEach(c => c.classList.remove('selected'));
+          col.classList.add('selected');
+          updateSelectedDayCard(day, 'strain');
+        });
+
+        chartContainer.appendChild(col);
+      });
+
+      updateSelectedDayCard(slice[slice.length - 1], 'strain');
+    }
   }
 
-  function updateSelectedDayCard(day) {
+  function updateSelectedDayCard(day, mode = currentMetricMode) {
     if (!day) return;
-    document.getElementById('sel-day-date').textContent = `${day.date} (${day.asleep_hm})`;
     const scoreBadge = document.getElementById('sel-day-score');
-    scoreBadge.textContent = `회복도 ${day.condition_score}점`;
 
-    if (day.condition_score >= 80) scoreBadge.className = 'badge-tag success';
-    else if (day.condition_score >= 65) scoreBadge.className = 'badge-tag warning';
-    else scoreBadge.className = 'badge-tag danger';
+    if (mode === 'strain') {
+      const strainVal = day.day_strain ? day.day_strain.toFixed(1) : '14.0';
+      const balState = day.balance_state ? day.balance_state.split(' (')[0] : '최적 훈련 밸런스';
+      const balClass = day.balance_class || 'success';
 
-    document.getElementById('sel-day-sleep').textContent = `${day.asleep_hm} (깊은수면 ${day.deep_hm})`;
-    document.getElementById('sel-day-debt').textContent = day.exponential_debt_hm || '0시간';
-    document.getElementById('sel-day-window').textContent = `${day.bed_time} ~ ${day.wake_time}`;
-    document.getElementById('sel-day-eff').textContent = `${day.efficiency}%`;
+      document.getElementById('sel-day-date').textContent = `${day.date} · ${balState}`;
+      scoreBadge.textContent = `회복도 ${day.condition_score}점`;
+      scoreBadge.className = `badge-tag ${balClass}`;
+
+      document.getElementById('sel-day-sleep').innerHTML = `<span style="color: var(--accent-purple); font-weight: 700;">${strainVal}</span> / 21.0`;
+      document.getElementById('sel-day-debt').innerHTML = `<span style="color: var(--accent-cyan); font-weight: 700;">${day.strain_target || '14.0~17.5'}</span>`;
+      document.getElementById('sel-day-window').textContent = day.strain_zone ? day.strain_zone.split(' (')[0] : '고강도 최적';
+      document.getElementById('sel-day-eff').innerHTML = `<span class="badge-tag ${balClass}">${balState}</span>`;
+    } else {
+      document.getElementById('sel-day-date').textContent = `${day.date} (${day.asleep_hm})`;
+      scoreBadge.textContent = `회복도 ${day.condition_score}점`;
+
+      if (day.condition_score >= 80) scoreBadge.className = 'badge-tag success';
+      else if (day.condition_score >= 65) scoreBadge.className = 'badge-tag warning';
+      else scoreBadge.className = 'badge-tag danger';
+
+      document.getElementById('sel-day-sleep').textContent = `${day.asleep_hm} (깊은수면 ${day.deep_hm || '-'})`;
+      document.getElementById('sel-day-debt').textContent = day.exponential_debt_hm || '0시간';
+      document.getElementById('sel-day-window').textContent = `${day.bed_time} ~ ${day.wake_time}`;
+      document.getElementById('sel-day-eff').textContent = `${day.efficiency}%`;
+    }
   }
 
   function renderHistoryTable(history) {
@@ -470,6 +610,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const reversed = [...history].reverse();
     reversed.forEach(row => {
       const tr = document.createElement('tr');
+      const strainVal = row.day_strain ? row.day_strain.toFixed(1) : '-';
       tr.innerHTML = `
         <td style="font-weight: 600;">${row.date}</td>
         <td style="font-weight: 700; color: #34D399;">${row.asleep_hm}</td>
@@ -477,6 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td>${row.efficiency}%</td>
         <td style="color: #FBBF24;">${row.exponential_debt_hm}</td>
         <td><span class="badge-tag ${row.condition_score >= 80 ? 'success' : row.condition_score >= 65 ? 'warning' : 'danger'}">${row.condition_score}점</span></td>
+        <td><span style="font-weight: 700; color: #C084FC;">${strainVal}</span> <small style="color: var(--text-muted);">/21</small></td>
       `;
       tbody.appendChild(tr);
     });
@@ -547,6 +689,18 @@ document.addEventListener('DOMContentLoaded', () => {
       const qualityScore = 20;
       const debtPenalty = Math.min(20, expDebt * 2.2);
       day.condition_score = Math.round(Math.max(40, Math.min(100, timeScore + effScore + qualityScore - debtPenalty)));
+
+      // Update strain target based on updated condition score
+      if (day.condition_score >= 80) {
+        day.strain_target = "14.0 ~ 17.5";
+        day.strain_zone = "고강도 운동 최적 (Optimal)";
+      } else if (day.condition_score >= 65) {
+        day.strain_target = "10.0 ~ 14.0";
+        day.strain_zone = "중강도 유지 (Maintenance)";
+      } else {
+        day.strain_target = "6.0 ~ 10.0";
+        day.strain_zone = "능동적 회복 (Active Recovery)";
+      }
     });
   }
 
