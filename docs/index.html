@@ -12,9 +12,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="./style.css">
 </head>
-<body>
+<body class="static-awaiting-sync">
 
   <!-- Background Ambient Glow -->
   <div class="ambient-glow glow-1"></div>
@@ -220,6 +220,7 @@
           <span style="font-size: 13px; font-weight: 600;">오늘의 AI 건강 처방</span>
         </div>
         <div class="ai-body" id="ai-briefing-text">
+          <div id="static-mode-disclosure" class="static-mode-disclosure">정적 모드: Gemini AI 코칭 · 카카오 알림 비활성</div>
           AI 맞춤 분석 브리핑을 불러오는 중입니다...
         </div>
       </section>
@@ -563,6 +564,9 @@
     </button>
   </nav>
 
-  <script src="/assets/app.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="./config.js"></script>
+  <script src="./health-static.js"></script>
+  <script src="./app.js"></script>
 </body>
 </html>

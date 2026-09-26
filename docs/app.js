@@ -10,30 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentTargetHours = 8.0;
   let currentMetricMode = 'sleep';
 
-  let csrfToken = null;
-
-  async function loadData() {
-    const res = await fetch('/api/data', { cache: 'no-store' });
-    if (!res.ok) throw new Error('data fetch failed: ' + res.status);
-    const data = await res.json();
-    appData = data;
-    currentTargetHours = data.today.target_sleep_hours || 8.0;
-    initApp(data);
-  }
-
-  async function initializeSession() {
-    const res = await fetch('/api/session', { cache: 'no-store' });
-    if (!res.ok) throw new Error('session fetch failed: ' + res.status);
-    const info = await res.json();
-    csrfToken = info.csrf_token;
-    await loadData();
-  }
-
-  initializeSession().catch(err => {
-    console.error('Data load error:', err);
-    document.getElementById('recovery-subtitle').textContent = '데이터를 불러오지 못했습니다. 동기화를 눌러 다시 시도하세요.';
-  });
-
   const syncButton = document.getElementById('sync-button');
   const syncStatus = document.getElementById('sync-status');
 
@@ -44,33 +20,40 @@ document.addEventListener('DOMContentLoaded', () => {
     syncButton.dataset.state = state || 'idle';
   }
 
-  async function pollSyncStatus() {
-    while (true) {
-      const res = await fetch('/api/sync/status', { cache: 'no-store' });
-      if (!res.ok) throw new Error('sync status failed: ' + res.status);
-      const status = await res.json();
-      setSyncState(status.state, status.message);
-      if (status.state !== 'running') {
-        if (status.state === 'success') await loadData();
-        return;
-      }
-      await new Promise(resolve => setTimeout(resolve, 1500));
+  function showStaticModeWaitingState() {
+    document.body.classList.add('static-awaiting-sync');
+    setSyncState('idle', 'Google 계정으로 동기화하세요.');
+    const recoverySub = document.getElementById('recovery-subtitle');
+    if (recoverySub) {
+      recoverySub.textContent = '브라우저에 저장된 건강 데이터가 없습니다. 동기화 버튼을 눌러 현재 세션에서만 불러옵니다.';
+    }
+    const aiBriefingEl = document.getElementById('ai-briefing-text');
+    if (aiBriefingEl) {
+      aiBriefingEl.textContent = '정적 모드에서는 Gemini API 키를 브라우저에 넣지 않으므로 AI 코칭을 사용하지 않습니다.';
     }
   }
 
+  async function syncFromGoogle() {
+    if (!window.MySleepCoachStatic) {
+      throw new Error('정적 Health 모듈을 불러오지 못했습니다.');
+    }
+    setSyncState('running', 'Google Health 데이터를 불러오는 중...');
+    const data = await window.MySleepCoachStatic.sync();
+    appData = data;
+    currentTargetHours = data.today.target_sleep_hours || 8.0;
+    initApp(data);
+    document.body.classList.remove('static-awaiting-sync');
+    setSyncState('success', `동기화 완료 · ${data.today.date}`);
+  }
+
+  showStaticModeWaitingState();
+
   syncButton.addEventListener('click', async () => {
-    if (!csrfToken) return;
-    setSyncState('running', '최신 수면 데이터를 가져오는 중...');
     try {
-      const res = await fetch('/api/sync', {
-        method: 'POST',
-        headers: { 'X-CSRF-Token': csrfToken }
-      });
-      if (!res.ok && res.status !== 409) throw new Error('sync start failed: ' + res.status);
-      await pollSyncStatus();
+      await syncFromGoogle();
     } catch (err) {
-      console.error('Sync error:', err);
-      setSyncState('error', '동기화에 실패했습니다. 잠시 후 다시 시도하세요.');
+      const message = err instanceof Error ? err.message : '알 수 없는 오류';
+      setSyncState('error', message);
     }
   });
 
@@ -200,21 +183,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('quick-seg-deep').style.width = `${today.deep_pct}%`;
     document.getElementById('quick-seg-rem').style.width = `${today.rem_pct}%`;
     document.getElementById('quick-seg-light').style.width = `${today.light_pct}%`;
-    document.getElementById('quick-seg-awake').style.width = `${today.awake_pct || 4}%`;
+    document.getElementById('quick-seg-awake').style.width = `${today.awake_pct ?? 0}%`;
 
     document.getElementById('quick-deep-text').textContent = `${today.deep_hm} (${today.deep_pct}%)`;
     document.getElementById('quick-rem-text').textContent = `${today.rem_hm} (${today.rem_pct}%)`;
     document.getElementById('quick-light-text').textContent = `${today.light_hm} (${today.light_pct}%)`;
-    document.getElementById('quick-awake-text').textContent = `${today.awake_hm} (${today.awake_pct || 4}%)`;
+    document.getElementById('quick-awake-text').textContent = `${today.awake_hm} (${today.awake_pct ?? 0}%)`;
 
     // Circadian Timeline
     document.getElementById('circadian-wake-ref').textContent = `기상 ${today.wake_time} 기준`;
     renderCircadianTimeline(data.circadian_windows, today.wake_time);
 
-    // AI Coaching Text
+    // Server-key features are intentionally unavailable in static mode.
     const aiBriefingEl = document.getElementById('ai-briefing-text');
-    if (data.ai_briefing) {
-      aiBriefingEl.textContent = data.ai_briefing;
+    if (aiBriefingEl) {
+      aiBriefingEl.textContent = data.ai_briefing ||
+        '정적 모드에서는 Gemini AI 코칭과 카카오 알림을 사용할 수 없습니다. 서버 비밀키를 브라우저에 저장하지 않는 설계입니다.';
     }
   }
 
@@ -275,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('detail-deep-val').textContent = `${today.deep_hm} (${today.deep_pct}%)`;
     document.getElementById('detail-rem-val').textContent = `${today.rem_hm} (${today.rem_pct}%)`;
     document.getElementById('detail-light-val').textContent = `${today.light_hm} (${today.light_pct}%)`;
-    document.getElementById('detail-awake-val').textContent = `${today.awake_hm} (${today.awake_pct || 4}%)`;
+    document.getElementById('detail-awake-val').textContent = `${today.awake_hm} (${today.awake_pct ?? 0}%)`;
 
     const stages = today.hypnogram || [];
     if (!stages.length) {
@@ -410,31 +394,31 @@ document.addEventListener('DOMContentLoaded', () => {
   function initTrends(history) {
     const pills = document.querySelectorAll('.filter-pill');
     pills.forEach(pill => {
-      pill.addEventListener('click', () => {
+      pill.onclick = () => {
         pills.forEach(p => p.classList.remove('active'));
         pill.classList.add('active');
         const periodStr = pill.getAttribute('data-period');
         currentPeriod = periodStr === 'all' ? 'all' : Number(periodStr);
         renderTrends(history, currentPeriod);
-      });
+      };
     });
 
     // Metric Mode Buttons (Sleep vs Strain)
     const btnSleep = document.getElementById('btn-mode-sleep');
     const btnStrain = document.getElementById('btn-mode-strain');
     if (btnSleep && btnStrain) {
-      btnSleep.addEventListener('click', () => {
+      btnSleep.onclick = () => {
         currentMetricMode = 'sleep';
         btnSleep.classList.add('active');
         btnStrain.classList.remove('active');
         renderTrends(history, currentPeriod);
-      });
-      btnStrain.addEventListener('click', () => {
+      };
+      btnStrain.onclick = () => {
         currentMetricMode = 'strain';
         btnStrain.classList.add('active');
         btnSleep.classList.remove('active');
         renderTrends(history, currentPeriod);
-      });
+      };
     }
 
     // History table accordion toggle
@@ -442,7 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tableWrapper = document.getElementById('history-table-wrapper');
     const toggleIcon = document.getElementById('history-toggle-icon');
 
-    toggleBtn.addEventListener('click', () => {
+    toggleBtn.onclick = () => {
       const isCollapsed = tableWrapper.classList.contains('collapsed');
       if (isCollapsed) {
         tableWrapper.classList.remove('collapsed');
@@ -451,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tableWrapper.classList.add('collapsed');
         toggleIcon.textContent = '▼ 열기';
       }
-    });
+    };
 
     renderTrends(history, currentPeriod);
     renderHistoryTable(history);
@@ -701,7 +685,7 @@ document.addEventListener('DOMContentLoaded', () => {
     slider.value = currentTargetHours;
     sliderVal.textContent = `${currentTargetHours.toFixed(1)}시간`;
 
-    slider.addEventListener('input', (e) => {
+    slider.oninput = (e) => {
       const val = parseFloat(e.target.value);
       currentTargetHours = val;
       sliderVal.textContent = `${val.toFixed(1)}시간`;
@@ -709,7 +693,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Dynamically recalculate debt across history
       recalculateDebtLocally(data.all_history, val);
       renderTrends(data.all_history, currentPeriod);
-    });
+    };
   }
 
   function recalculateDebtLocally(history, targetH) {
@@ -721,7 +705,7 @@ document.addEventListener('DOMContentLoaded', () => {
       let weightedSum = 0;
       let weightSum = 0;
       reversed.forEach((past, d) => {
-        const deficit = Math.max(0, targetH - past.asleep_hours);
+        const deficit = Math.max(0, targetH - (past.effective_sleep_hours ?? past.asleep_hours));
         const w = Math.exp(-0.15 * d);
         weightedSum += deficit * w;
         weightSum += w;
@@ -734,7 +718,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Recompute condition score
       const timeScore = Math.min(40, (day.asleep_hours / targetH) * 40);
       const effScore = Math.min(30, (day.efficiency / 100) * 30);
-      const qualityScore = 20;
+      const deepRemR = (day.deep_hours + day.rem_hours) / Math.max(1, day.asleep_hours);
+      const qualityScore = Math.min(30, deepRemR * 65);
       const debtPenalty = Math.min(20, expDebt * 2.2);
       day.condition_score = Math.round(Math.max(40, Math.min(100, timeScore + effScore + qualityScore - debtPenalty)));
 

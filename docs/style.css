@@ -1142,3 +1142,28 @@ input[type=range]::-webkit-slider-thumb {
   .header-right { justify-content: flex-end; flex-wrap: wrap; }
   .sync-status { flex-basis: 100%; text-align: right; max-width: 220px; }
 }
+
+
+/* Static browser-only mode: never present baked-in placeholder values as live health data. */
+body.static-awaiting-sync .tab-content > * {
+  visibility: hidden;
+}
+
+body.static-awaiting-sync .tab-content.active::before {
+  content: "Google 동기화 후 이 화면의 건강 데이터가 표시됩니다.";
+  display: block;
+  visibility: visible;
+  margin: 24px 16px;
+  padding: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 14px;
+  color: var(--text-secondary);
+  text-align: center;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.static-mode-disclosure {
+  margin-bottom: 10px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
