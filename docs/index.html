@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
 
@@ -55,7 +55,7 @@
       </div>
       <div class="header-right">
         <span class="history-badge" id="total-days-badge">104일 누적</span>
-        <span class="date-badge" id="current-date">2026-09-18</span>
+        <button class="sync-button" id="sync-button" type="button">동기화</button><span class="sync-status" id="sync-status" aria-live="polite"></span><span class="date-badge" id="current-date">2026-09-18</span>
       </div>
     </header>
 
@@ -563,6 +563,6 @@
     </button>
   </nav>
 
-  <script src="app.js"></script>
+  <script src="/assets/app.js"></script>
 </body>
 </html>

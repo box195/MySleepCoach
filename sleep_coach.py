@@ -16,16 +16,49 @@ if sys.platform == "win32":
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_PATH = os.path.join(BASE_DIR, "config.json")
-DOCS_DIR = os.path.join(BASE_DIR, "docs")
-DATA_JSON_PATH = os.path.join(DOCS_DIR, "data.json")
+PRIVATE_DATA_DIR = os.path.join(BASE_DIR, "private_data")
+DATA_JSON_PATH = os.path.join(PRIVATE_DATA_DIR, "data.json")
 
 KST = datetime.timezone(datetime.timedelta(hours=9))
 
 def load_config():
-    with open(CONFIG_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
+    """Load local config and optionally override secrets from server environment variables."""
+    cfg = {}
+    if os.path.exists(CONFIG_PATH):
+        with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+            cfg = json.load(f)
+
+    env_map = {
+        ("google", "client_id"): "GOOGLE_CLIENT_ID",
+        ("google", "client_secret"): "GOOGLE_CLIENT_SECRET",
+        ("google", "refresh_token"): "GOOGLE_REFRESH_TOKEN",
+        ("gemini", "api_key"): "GEMINI_API_KEY",
+        ("gemini", "model"): "GEMINI_MODEL",
+        ("kakao", "rest_api_key"): "KAKAO_REST_API_KEY",
+        ("kakao", "client_secret"): "KAKAO_CLIENT_SECRET",
+        ("kakao", "refresh_token"): "KAKAO_REFRESH_TOKEN",
+    }
+    environment_managed = False
+    for (section, key), env_name in env_map.items():
+        value = os.environ.get(env_name)
+        if value:
+            cfg.setdefault(section, {})[key] = value
+            environment_managed = True
+
+    target_hours = os.environ.get("TARGET_SLEEP_HOURS")
+    if target_hours:
+        cfg.setdefault("settings", {})["target_sleep_hours"] = float(target_hours)
+        environment_managed = True
+
+    if environment_managed:
+        cfg["_environment_managed"] = True
+    return cfg
+
 
 def save_config(cfg):
+    """Persist local OAuth state only for the local config-file workflow."""
+    if cfg.get("_environment_managed"):
+        return
     with open(CONFIG_PATH, "w", encoding="utf-8") as f:
         json.dump(cfg, f, indent=2, ensure_ascii=False)
 
@@ -601,7 +634,7 @@ def send_kakao_message(access_token, text):
 
 def export_web_dashboard_data(metrics_pkg, briefing_text):
     """GitHub Pages 웹앱에서 렌더링할 docs/data.json 내보내기"""
-    os.makedirs(DOCS_DIR, exist_ok=True)
+    os.makedirs(PRIVATE_DATA_DIR, exist_ok=True)
 
     payload = {
         "updated_at": datetime.datetime.now(KST).strftime("%Y-%m-%d %H:%M:%S"),
@@ -618,12 +651,12 @@ def export_web_dashboard_data(metrics_pkg, briefing_text):
         json.dump(payload, f, indent=2, ensure_ascii=False, default=str)
     print(f"[OK] 웹앱용 최신 데이터({len(metrics_pkg['all_history'])}일치)가 {DATA_JSON_PATH} 에 저장되었습니다.")
 
-def run(mode="morning"):
+def run(mode="morning", send_notification=True):
     cfg = load_config()
 
     print("1. 구글 및 카카오 토큰 갱신 중...")
     google_token = refresh_google_token(cfg)
-    kakao_token = refresh_kakao_token(cfg)
+    kakao_token = refresh_kakao_token(cfg) if send_notification else None
 
     print("2. Google Health API에서 핏빗 전체 수면 데이터 수집 중 (페이지네이션 적용)...")
     sleep_points = fetch_all_health_records(google_token, "sleep")
@@ -652,18 +685,18 @@ def run(mode="morning"):
     briefing_text = generate_ai_briefing(metrics_pkg, gemini_key, model=model, mode=mode)
     print("\n--- [카카오톡 발송 텍스트] ---\n" + briefing_text + "\n-----------------------------\n")
 
-    print("5. 웹앱 대시보드 데이터(docs/data.json) 발행 중...")
+    print("5. 웹앱 대시보드 데이터(private_data/data.json) 저장 중...")
     export_web_dashboard_data(metrics_pkg, briefing_text)
 
     # 카카오톡 중복 발송 방지 (아침 7시~12시 매시간 실행 시 중복 스팸 방지)
     today_date = today["date"]
     last_notified = cfg.get("last_notified_morning_date")
 
-    should_send = True
-    if mode == "morning" and last_notified == today_date:
+    should_send = send_notification
+    if send_notification and mode == "morning" and last_notified == today_date:
         should_send = False
-        print(f"[알림] 오늘({today_date}) 아침 수면 브리핑은 이미 카카오톡으로 전송되었습니다. (중복 발송 방지: 대시보드 데이터만 최신으로 갱신)")
-    elif mode == "morning":
+        print(f"[안내] 오늘({today_date}) 아침 알림을 이미 보냈습니다. 중복 발송을 건너뜁니다.")
+    elif send_notification and mode == "morning":
         cfg["last_notified_morning_date"] = today_date
         save_config(cfg)
 

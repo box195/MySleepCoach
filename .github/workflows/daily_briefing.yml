@@ -1,87 +1,31 @@
-name: Daily Sleep Briefing
+name: Manual Sleep Briefing
 
 on:
-  schedule:
-    # 아침 브리핑: 매일 한국 시간 오전 6시 55분 (UTC 21:55 전날)
-    - cron: '55 21 * * *'
-    # 저녁 브리핑: 매일 한국 시간 오후 9시 00분 (UTC 12:00)
-    - cron: '0 12 * * *'
   workflow_dispatch:
     inputs:
       mode:
-        description: '브리핑 모드 (morning 또는 evening)'
+        description: 'Briefing mode (morning or evening)'
         required: true
         default: 'morning'
 
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: read
 
 jobs:
   briefing:
     runs-on: ubuntu-latest
     steps:
-      - name: 저장소 체크아웃
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Python 설정
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: 필수 라이브러리 설치
-        run: |
-          pip install requests
-
-      - name: 설정 파일 생성
-        run: |
-          cat << 'EOF' > config.json
-          {
-            "google": {
-              "client_id": "${{ secrets.GOOGLE_CLIENT_ID }}",
-              "client_secret": "${{ secrets.GOOGLE_CLIENT_SECRET }}",
-              "refresh_token": "${{ secrets.GOOGLE_REFRESH_TOKEN }}",
-              "access_token": ""
-            },
-            "kakao": {
-              "rest_api_key": "${{ secrets.KAKAO_REST_API_KEY }}",
-              "refresh_token": "${{ secrets.KAKAO_REFRESH_TOKEN }}",
-              "access_token": ""
-            },
-            "gemini": {
-              "api_key": "${{ secrets.GEMINI_API_KEY }}",
-              "model": "models/gemini-3.6-flash"
-            },
-            "settings": {
-              "target_sleep_hours": 8.0
-            }
-          }
-          EOF
-
-      - name: 브리핑 실행, 대시보드 데이터 생성 및 카톡 전송
-        run: |
-          HOUR=$(date -u +%H)
-          if [ "$HOUR" -ge 10 ] && [ "$HOUR" -le 16 ]; then
-            MODE="evening"
-          else
-            MODE="morning"
-          fi
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            MODE="${{ github.event.inputs.mode }}"
-          fi
-          python sleep_coach.py "$MODE"
-
-      - name: 최신 대시보드 데이터 GitHub Pages 자동 커밋
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/data.json
-          if git diff --staged --quiet; then
-            echo "변경 사항 없음"
-          else
-            git commit -m "Automated update of sleep & activity dashboard data"
-            git push origin main
-          fi
+      - run: pip install -r requirements.txt
+      - name: Run manually requested briefing
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+          KAKAO_REST_API_KEY: ${{ secrets.KAKAO_REST_API_KEY }}
+          KAKAO_REFRESH_TOKEN: ${{ secrets.KAKAO_REFRESH_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python sleep_coach.py "${{ github.event.inputs.mode }}"

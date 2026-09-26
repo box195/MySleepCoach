@@ -10,21 +10,69 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentTargetHours = 8.0;
   let currentMetricMode = 'sleep';
 
-  // 1. Fetch data.json
-  fetch('data.json')
-    .then(res => {
-      if (!res.ok) throw new Error('data.json fetch failed: ' + res.status);
-      return res.json();
-    })
-    .then(data => {
-      appData = data;
-      currentTargetHours = data.today.target_sleep_hours || 8.0;
-      initApp(data);
-    })
-    .catch(err => {
-      console.error('Data load error:', err);
-      document.getElementById('recovery-subtitle').textContent = '데이터를 불러오는 중 오류가 발생했습니다.';
-    });
+  let csrfToken = null;
+
+  async function loadData() {
+    const res = await fetch('/api/data', { cache: 'no-store' });
+    if (!res.ok) throw new Error('data fetch failed: ' + res.status);
+    const data = await res.json();
+    appData = data;
+    currentTargetHours = data.today.target_sleep_hours || 8.0;
+    initApp(data);
+  }
+
+  async function initializeSession() {
+    const res = await fetch('/api/session', { cache: 'no-store' });
+    if (!res.ok) throw new Error('session fetch failed: ' + res.status);
+    const info = await res.json();
+    csrfToken = info.csrf_token;
+    await loadData();
+  }
+
+  initializeSession().catch(err => {
+    console.error('Data load error:', err);
+    document.getElementById('recovery-subtitle').textContent = '데이터를 불러오지 못했습니다. 동기화를 눌러 다시 시도하세요.';
+  });
+
+  const syncButton = document.getElementById('sync-button');
+  const syncStatus = document.getElementById('sync-status');
+
+  function setSyncState(state, message) {
+    syncStatus.textContent = message || '';
+    syncButton.disabled = state === 'running';
+    syncButton.textContent = state === 'running' ? '동기화 중' : '동기화';
+    syncButton.dataset.state = state || 'idle';
+  }
+
+  async function pollSyncStatus() {
+    while (true) {
+      const res = await fetch('/api/sync/status', { cache: 'no-store' });
+      if (!res.ok) throw new Error('sync status failed: ' + res.status);
+      const status = await res.json();
+      setSyncState(status.state, status.message);
+      if (status.state !== 'running') {
+        if (status.state === 'success') await loadData();
+        return;
+      }
+      await new Promise(resolve => setTimeout(resolve, 1500));
+    }
+  }
+
+  syncButton.addEventListener('click', async () => {
+    if (!csrfToken) return;
+    setSyncState('running', '최신 수면 데이터를 가져오는 중...');
+    try {
+      const res = await fetch('/api/sync', {
+        method: 'POST',
+        headers: { 'X-CSRF-Token': csrfToken }
+      });
+      if (!res.ok && res.status !== 409) throw new Error('sync start failed: ' + res.status);
+      await pollSyncStatus();
+    } catch (err) {
+      console.error('Sync error:', err);
+      setSyncState('error', '동기화에 실패했습니다. 잠시 후 다시 시도하세요.');
+    }
+  });
 
   // Tab Navigation
   const tabButtons = document.querySelectorAll('.tab-btn');
