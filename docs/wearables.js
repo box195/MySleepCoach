@@ -359,7 +359,18 @@
       switch (spec.type) {
         case "daily-heart-rate-variability":
           value = asNumber(p.averageHeartRateVariabilityMilliseconds);
-          display = value === null ? "-" : `${round(value, 1)} ms`;
+          display = value === null ? "-" : `${round(value, 1)} ms (평균)`;
+          detail = [
+            asNumber(p.deepSleepRootMeanSquareOfSuccessiveDifferencesMilliseconds) === null ? null
+              : `깊은 잠 RMSSD ${round(Number(p.deepSleepRootMeanSquareOfSuccessiveDifferencesMilliseconds), 1)} ms`,
+            asNumber(p.nonRemHeartRateBeatsPerMinute) === null ? null
+              : `비 REM 심박 ${round(Number(p.nonRemHeartRateBeatsPerMinute), 0)} bpm`,
+            asNumber(p.entropy) === null ? null : `엔트로피 ${round(Number(p.entropy), 2)}`
+          ].filter(Boolean).join(" · ");
+          if (value === null && asNumber(p.deepSleepRootMeanSquareOfSuccessiveDifferencesMilliseconds) !== null) {
+            value = asNumber(p.deepSleepRootMeanSquareOfSuccessiveDifferencesMilliseconds);
+            display = `${round(value, 1)} ms (깊은 잠 RMSSD)`;
+          }
           break;
         case "daily-resting-heart-rate":
           value = asNumber(p.beatsPerMinute);
@@ -381,6 +392,7 @@
           display = value === null ? "-" : `${round(value, 1)}%`;
           detail = [p.lowerBoundPercentage, p.upperBoundPercentage].every(v => asNumber(v) !== null)
             ? `범위 ${round(Number(p.lowerBoundPercentage), 1)}–${round(Number(p.upperBoundPercentage), 1)}%` : "";
+          if (asNumber(p.standardDeviationPercentage) !== null) detail += `${detail ? " · " : ""}표준편차 ${round(Number(p.standardDeviationPercentage), 1)}%p`;
           break;
         case "daily-sleep-temperature-derivations": {
           const nightly = asNumber(p.nightlyTemperatureCelsius);
@@ -585,7 +597,14 @@
       date: s.date,
       value: s.asleep_hours,
       display: s.asleep_hm,
-      detail: `${s.bed_time}–${s.wake_time} · 반환 summary 기반 효율 ${Number.isFinite(s.efficiency) ? `${s.efficiency}%` : "-"}`,
+      detail: [
+        `${s.bed_time}–${s.wake_time}`,
+        `앱 계산 효율 ${Number.isFinite(s.efficiency) ? `${s.efficiency}%` : "-"}`,
+        `깊은 잠 ${s.deep_hm} · REM ${s.rem_hm} · 깨어 있음 ${s.awake_hm}`,
+        Number.isFinite(s.awake_segments) ? `깨어난 구간 ${s.awake_segments}회` : null,
+        Number.isFinite(s.restless_minutes) && s.restless_minutes > 0 ? `뒤척임 ${round(s.restless_minutes, 0)}분` : null,
+        Number.isFinite(s.minutes_to_fall_asleep) ? `잠들기까지 ${round(s.minutes_to_fall_asleep, 0)}분` : null
+      ].filter(Boolean).join(" · "),
       source: s.device || "Google Health"
     }));
   }
