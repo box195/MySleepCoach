@@ -55,7 +55,7 @@
       </div>
       <div class="header-right">
         <span class="history-badge" id="total-days-badge">기록 없음</span>
-        <button class="sync-button" id="sync-button" type="button">동기화</button><span class="sync-status" id="sync-status" aria-live="polite"></span><span class="date-badge" id="current-date">-</span>
+        <label class="sync-range-label" for="wearable-range-select">조회 기간</label><select id="wearable-range-select" class="sync-range-select" aria-label="Google Health 조회 기간"><option value="14">14일</option><option value="30" selected>30일</option><option value="90">90일</option></select><button class="sync-button" id="sync-button" type="button">동기화</button><span class="sync-status" id="sync-status" aria-live="polite"></span><span class="date-badge" id="current-date">-</span>
       </div>
     </header>
 
@@ -110,7 +110,7 @@
         <!-- Tile 3: Sleep Efficiency -->
         <div class="metric-tile">
           <div class="metric-header">
-            <span>수면 효율</span>
+            <span>수면 효율 (앱 계산)</span>
             <span class="metric-icon">✨</span>
           </div>
           <div class="metric-value font-heading" id="quick-eff-val">-</div>
@@ -499,13 +499,13 @@
       <section class="glass-card">
         <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">계산 방법과 한계</h3>
         <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;">
-          수면 효율은 Google Health의 수면 summary가 제공하는 <strong>minutesAsleep / minutesInSleepPeriod × 100</strong>을 우선 사용합니다.
+          화면의 수면 효율은 API가 반환한 요약값으로 앱이 계산한 <strong>minutesAsleep / minutesInSleepPeriod × 100</strong>입니다. Google 공식 효율은 잠든 시간/침대에 머문 시간으로 계산하며 내부 처리 시점이 다를 수 있어, 이 값을 Google 공식 효율과 같다고 표시하지 않습니다.
           겹치는 소스는 reconcile 결과를 사용하고, 하루에 여러 수면이 있으면 낮잠보다 주 수면을 우선합니다.
         </p>
         <div class="formula-box">
-          수면 점수(추정) = 목표 수면시간 달성도 65% + 수면 효율 35%<br>
+          수면 점수(추정) = 수면시간 50% + 취침시각 규칙성 30% + 깨어남·뒤척임 20% (Apple 공개 비중을 참고한 앱 자체 계산)<br>
           컨디션 점수(추정) = 수면 점수 60% + 개인 14일 HRV 기준선 25% + 개인 14일 안정시 심박수 기준선 15%<br>
-          * 사용할 수 없는 생체지표는 제외하고 남은 항목의 가중치를 다시 정규화합니다.
+          * 규칙성은 이전 7일 이상 기록이 있어야 적용하고, 사용할 수 없는 항목은 제외한 뒤 나머지 가중치를 다시 정규화합니다.
         </div>
         <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-top: 12px;">
           Google Health API에서 별도의 공식 수면 점수나 readiness/condition 점수 데이터 타입은 사용하지 않습니다.
@@ -540,6 +540,8 @@
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="./config.js"></script>
   <script src="./health-static.js"></script>
+  <script src="./wearables.js"></script>
   <script src="./app.js"></script>
+  <script src="./wearables-ui.js"></script>
 </body>
 </html>

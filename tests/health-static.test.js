@@ -99,6 +99,11 @@ assert.strictEqual(api.parseSleepSessions([{
 const metrics = api.calculateMetrics(sleep, [], hrv, rhr, 8);
 assert.strictEqual(metrics.all_history.length, 4);
 assert.strictEqual(metrics.today.sleep_efficiency, 92);
+const equalDuration = { ...parsed[0], asleep_hours: 7, awake_hours: 0.2, restless_minutes: 0, awake_segments: 1 };
+const disrupted = { ...equalDuration, awake_hours: 0.8, restless_minutes: 25, awake_segments: 6 };
+assert(api.sleepScoreEstimate(disrupted, 8, []) < api.sleepScoreEstimate(equalDuration, 8, []),
+  "sleep score must reflect awakenings and restlessness beyond duration");
+assert.strictEqual(metrics.metric_methodology.sleep_score.includes("Google/Fitbit/Apple 공식 점수가 아닙니다"), true);
 assert.strictEqual(metrics.today.hrv_ms, 45);
 assert.strictEqual(metrics.today.resting_hr_bpm, 58);
 assert(metrics.today.readiness_source.includes("HRV"));

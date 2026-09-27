@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
       throw new Error('Google Health 모듈을 불러오지 못했습니다.');
     }
     setSyncState('running', 'Google Health 데이터를 동기화하는 중...');
-    const data = await window.MySleepCoachStatic.sync();
+    const data = await window.MySleepCoachStatic.sync(message => setSyncState('running', message));
     appData = data;
     currentTargetHours = data.today.target_sleep_hours || 8.0;
     saveDashboardSnapshot(data);
@@ -97,8 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
   tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const targetTab = btn.getAttribute('data-tab');
-      tabButtons.forEach(b => b.classList.remove('active'));
-      tabContents.forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
       btn.classList.add('active');
       const targetEl = document.getElementById(targetTab);
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const today = data.today;
 
     // Header info
-    document.getElementById('device-name').textContent = today.device_name || 'Google Fitbit Air';
+    document.getElementById('device-name').textContent = today.device_name || 'Google Health';
     document.getElementById('current-date').textContent = today.date;
     document.getElementById('total-days-badge').textContent = `${data.all_history.length}일 누적`;
 
@@ -171,7 +171,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const hrvText = Number.isFinite(today.hrv_ms) ? `HRV ${today.hrv_ms.toFixed(1)} ms` : 'HRV 없음';
     const rhrText = Number.isFinite(today.resting_hr_bpm) ? `안정시 심박수 ${today.resting_hr_bpm.toFixed(0)} bpm` : '안정시 심박수 없음';
-    recoverySub.textContent = `${today.readiness_source || '생체 자료 부족'} · ${hrvText} · ${rhrText}. Google/Fitbit 공식 Readiness 점수가 아닌 MySleepCoach 추정치입니다. ${data.metric_methodology?.health_metrics_warning || ''}`;
+    const hrvChange = Number.isFinite(today.hrv_ms) && Number.isFinite(today.hrv_baseline_ms) && today.hrv_baseline_ms > 0
+      ? `기준 대비 HRV ${Math.round((today.hrv_ms / today.hrv_baseline_ms - 1) * 100)}%` : null;
+    const rhrChange = Number.isFinite(today.resting_hr_bpm) && Number.isFinite(today.resting_hr_baseline_bpm)
+      ? `기준 대비 안정시 심박수 ${Math.round(today.resting_hr_bpm - today.resting_hr_baseline_bpm) >= 0 ? '+' : ''}${Math.round(today.resting_hr_bpm - today.resting_hr_baseline_bpm)} bpm` : null;
+    const sleepContext = `깊은 잠 ${today.deep_hm || '-'} · REM ${today.rem_hm || '-'} · 깨어 있음 ${today.awake_hm || '-'}${Number.isFinite(today.awake_segments) ? ` (${today.awake_segments}회)` : ''}${Number.isFinite(today.restless_minutes) && today.restless_minutes > 0 ? ` · 뒤척임 ${Math.round(today.restless_minutes)}분` : ''}`;
+    recoverySub.textContent = `${today.readiness_source || '생체 자료 부족'} · ${hrvText} · ${rhrText} · ${[hrvChange, rhrChange, sleepContext].filter(Boolean).join(' · ')}. Google/Fitbit 공식 Readiness 점수가 아닌 MySleepCoach 추정치입니다. ${data.metric_methodology?.health_metrics_warning || ''}`;
 
     document.getElementById('quick-debt-val').textContent = today.exponential_debt_hm || '-';
     document.getElementById('quick-debt-badge').className = `badge-tag ${today.debt_badge_class || 'info'}`;
@@ -662,10 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const debt = weightedSum / Math.max(0.001, weightSum);
       day.exponential_debt_hours = Math.round(debt * 100) / 100;
       day.exponential_debt_hm = toHm(day.exponential_debt_hours);
-      const durationScore = Math.min(100, Math.max(0, day.asleep_hours / Math.max(0.1, targetH) * 100));
-      day.sleep_score_estimate = Math.round(Number.isFinite(day.efficiency)
-        ? durationScore * 0.65 + Math.min(100, Math.max(0, day.efficiency)) * 0.35
-        : durationScore);
+      day.sleep_score_estimate = window.MySleepCoachStatic.scoreSleep(day, targetH, history.slice(0, idx));
     });
   }
 

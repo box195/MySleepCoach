@@ -292,6 +292,7 @@
         end,
         date,
         bed_time: civilTime(interval, "civilStartTime", start),
+        bedtime_minutes: (() => { const parts = kstParts(start); return Number(parts.hour) * 60 + Number(parts.minute); })(),
         wake_time: civilTime(interval, "civilEndTime", end),
         bed_minutes: round(bedMinutes, 1),
         bed_hours: round(bedMinutes / 60),
@@ -311,8 +312,12 @@
         awake_hm: toHm((awakeMinutes || 0) / 60),
         awake_pct: bedMinutes > 0 ? Math.round(((awakeMinutes || 0) / bedMinutes) * 100) : null,
         efficiency,
+        efficiency_source: "MySleepCoach: summary.minutesAsleep / summary.minutesInSleepPeriod",
+        efficiency_is_official_google_score: false,
         minutes_to_fall_asleep: asNumber(summary.minutesToFallAsleep),
         minutes_after_wakeup: asNumber(summary.minutesAfterWakeUp),
+        restless_minutes: Number.isFinite(stageTotals.RESTLESS) ? stageTotals.RESTLESS : 0,
+        awake_segments: asNumber(summary.stagesSummary?.find(stage => normalizeStageType(stage.type) === "AWAKE")?.count),
         is_nap: Boolean(sleep?.metadata?.nap),
         processing_complete: sleep?.metadata?.processed !== false,
         device: point?.dataSource?.device?.displayName || "Google Health",
@@ -376,10 +381,25 @@
     return found ? Math.round(total) : null;
   }
 
-  function sleepScoreEstimate(day, targetHours) {
+  function sleepScoreEstimate(day, targetHours, priorDays) {
+    // Inspired by Apple's published categories (duration/consistency/interruptions),
+    // with transparent app-specific curves. This is never an official vendor score.
     const durationScore = clamp((day.asleep_hours / Math.max(0.1, targetHours)) * 100, 0, 100);
-    if (!Number.isFinite(day.efficiency)) return Math.round(durationScore);
-    return Math.round(durationScore * 0.65 + clamp(day.efficiency, 0, 100) * 0.35);
+    const interrupted = (day.awake_hours || 0) * 60 + (day.restless_minutes || 0);
+    const interruptionScore = clamp(100 - 200 * interrupted / Math.max(1, day.bed_minutes)
+      - Math.max(0, (day.awake_segments || 0) - 1) * 2, 0, 100);
+    const parts = [{ weight: 50, score: durationScore }, { weight: 20, score: interruptionScore }];
+    if (priorDays.length >= 7) {
+      const current = day.bedtime_minutes;
+      const shifts = priorDays.slice(-13).map(previous => {
+        const difference = Math.abs(current - previous.bedtime_minutes);
+        return Math.min(difference, 1440 - difference);
+      });
+      const averageShift = shifts.reduce((sum, value) => sum + value, 0) / shifts.length;
+      parts.push({ weight: 30, score: clamp(100 - averageShift / 3, 0, 100) });
+    }
+    return Math.round(parts.reduce((sum, part) => sum + part.weight * part.score, 0)
+      / parts.reduce((sum, part) => sum + part.weight, 0));
   }
 
   function baseline(values) {
@@ -455,7 +475,7 @@
     sessions.forEach((day, index) => {
       day.hrv_ms = hrvMap.get(day.date) ?? null;
       day.resting_hr_bpm = restingHrMap.get(day.date) ?? null;
-      day.sleep_score_estimate = sleepScoreEstimate(day, targetHours);
+      day.sleep_score_estimate = sleepScoreEstimate(day, targetHours, sessions.slice(0, index));
 
       const window = sessions.slice(Math.max(0, index - 13), index + 1).reverse();
       let weightedDeficit = 0;
@@ -560,6 +580,8 @@
     const history = sessions.map(session => ({
       date: session.date,
       bed_time: session.bed_time,
+      bedtime_minutes: session.bedtime_minutes,
+      bed_minutes: session.bed_minutes,
       wake_time: session.wake_time,
       asleep_hours: session.asleep_hours,
       asleep_hm: session.asleep_hm,
@@ -576,6 +598,10 @@
       awake_hours: session.awake_hours,
       awake_hm: session.awake_hm,
       awake_pct: session.awake_pct,
+      awake_segments: session.awake_segments,
+      restless_minutes: session.restless_minutes,
+      minutes_to_fall_asleep: session.minutes_to_fall_asleep,
+      minutes_after_wakeup: session.minutes_after_wakeup,
       efficiency: session.efficiency,
       exponential_debt_hours: session.exponential_debt_hours,
       exponential_debt_hm: session.exponential_debt_hm,
@@ -631,6 +657,10 @@
         awake_hm: latest.awake_hm,
         awake_hours: latest.awake_hours,
         awake_pct: latest.awake_pct,
+        awake_segments: latest.awake_segments,
+        restless_minutes: latest.restless_minutes,
+        minutes_to_fall_asleep: latest.minutes_to_fall_asleep,
+        minutes_after_wakeup: latest.minutes_after_wakeup,
         sleep_efficiency: latest.efficiency,
         device_name: latest.device,
         hypnogram: latest.hypnogram,
@@ -651,7 +681,9 @@
         active_minutes: null
       },
       metric_methodology: {
-        sleep_score: "추정치: 수면시간 목표 달성도 65% + Google Health summary 기반 수면효율 35%.",
+        sleep_score: "MySleepCoach 추정치: 수면시간 50, 취침시각 규칙성 30(이전 7일 이상), 깨어남·뒤척임 20 가중. 이전 기록이 부족하면 사용 가능한 항목만 재가중합니다. Apple의 공개 평가 범주와 비중을 참고했고 세부 점수 곡선은 앱 자체 규칙입니다. Google/Fitbit/Apple 공식 점수가 아닙니다.",
+        sleep_efficiency: "API 반환값 summary.minutesAsleep / summary.minutesInSleepPeriod로 앱이 계산한 비율입니다. Google 공식 수면 효율과 같다고 보장하지 않습니다.",
+        google_sleep_score: "Google Health 공식 수면점수에는 수면시간, 안정된 잠까지 걸린 시간, 잠의 안정성, 뒤척임과 각성 등이 반영됩니다. 공개되지 않은 가중치는 임의로 만들지 않았습니다.",
         readiness_score: "추정치: 수면 점수 60%, 개인 14일 기준선 대비 HRV 25%, 안정시 심박수 15%. 사용 가능한 항목만 재가중합니다.",
         sleep_debt: "추정치: 최근 최대 14일의 목표 수면 대비 부족분을 지수 가중 평균합니다.",
         native_scores_available: false,
@@ -703,6 +735,7 @@
 
   window.MySleepCoachStatic = Object.freeze({
     sync,
+    scoreSleep: sleepScoreEstimate,
     scopes: Object.freeze({
       sleep: SLEEP_SCOPE,
       activity: ACTIVITY_SCOPE,

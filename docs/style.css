@@ -948,7 +948,9 @@ input[type=range]::-webkit-slider-thumb {
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 6px 14px;
+  padding: 6px 8px;
+  min-width: 0;
+  flex: 1 1 0;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -1137,6 +1139,8 @@ input[type=range]::-webkit-slider-thumb {
 }
 .sync-button:disabled { opacity: .6; cursor: wait; }
 .sync-button[data-state="error"] { border-color: rgba(248,113,113,.45); color: #fca5a5; }
+.sync-range-label { font-size: 11px; color: var(--text-secondary); white-space: nowrap; }
+.sync-range-select { border: 1px solid rgba(255,255,255,.18); border-radius: 8px; background: #182235; color: #fff; padding: 5px; font-size: 11px; }
 .sync-status { max-width: 170px; color: var(--text-secondary); font-size: 10px; line-height: 1.2; }
 .app-header { flex-direction: column; align-items: stretch; gap: 10px; }
 .header-right { justify-content: flex-start; flex-wrap: wrap; }

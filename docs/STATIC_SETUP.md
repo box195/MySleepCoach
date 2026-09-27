@@ -33,15 +33,10 @@ GitHub Pages 설정과 저장소 공개 범위는 별도로 관리합니다.
 ```text
 https://www.googleapis.com/auth/googlehealth.sleep.readonly
 https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly
-```
-
-두 번째 권한은 일일 HRV와 안정시 심박수에 사용합니다. 사용자가 이를 허용하지 않으면 수면만 동기화하고 컨디션 점수는 자료 부족으로 표시합니다. 새 권한을 처음 요청할 때 Google 동의 화면이 나올 수 있습니다.
-
-`FETCH_STEPS: true`이면 추가 요청:
-
-```text
 https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly
 ```
+
+수면, 생체지표, 활동 항목을 각각 읽는 권한입니다. 허용하지 않은 범주의 카드에는 권한 없음이 표시됩니다. 새 활동 권한을 처음 요청할 때 Google 동의 화면이 나올 수 있습니다.
 
 사용 endpoint:
 
@@ -49,10 +44,10 @@ https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly
 GET https://health.googleapis.com/v4/users/me/dataTypes/sleep/dataPoints:reconcile
 GET https://health.googleapis.com/v4/users/me/dataTypes/daily-heart-rate-variability/dataPoints:reconcile
 GET https://health.googleapis.com/v4/users/me/dataTypes/daily-resting-heart-rate/dataPoints:reconcile
-GET https://health.googleapis.com/v4/users/me/dataTypes/steps/dataPoints:reconcile (선택)
+POST https://health.googleapis.com/v4/users/me/dataTypes/steps/dataPoints:dailyRollUp
 ```
 
-`nextPageToken`이 존재하는 동안 `pageToken`으로 다음 페이지를 계속 조회합니다. `reconcile` 요청이 실패하면 일반 `dataPoints` 목록으로 한 번 재시도하고, 화면에서는 같은 날짜의 주 수면을 우선 선택합니다.
+웨어러블 화면은 수면·심박·호흡·산소포화도·수면 온도·활동·운동·심폐체력·체중/체지방 등 여러 항목을 조회합니다. 14/30/90일을 고를 수 있으며 기본값은 30일입니다. Google 제한 때문에 심박수·활동시간·총 에너지·심박 구간별 에너지는 최대 14일만 일별 집계합니다. `nextPageToken`이 있으면 계속 조회하고, `reconcile`이 실패하면 일반 목록으로 한 번 재시도합니다. 데이터 타입별 미지원·권한 없음·기록 없음·조회 오류를 따로 표시합니다.
 
 ## 사용자 동작과 저장 정책
 
@@ -69,7 +64,7 @@ GET https://health.googleapis.com/v4/users/me/dataTypes/steps/dataPoints:reconci
 
 Gemini AI 코칭과 카카오 알림은 서버 비밀키/토큰이 필요한 기능이라 정적 모드에서는 호출하지 않고 화면에 비활성 상태를 표시합니다.
 
-수면효율은 Google Health의 `sleep.summary.minutesAsleep / sleep.summary.minutesInSleepPeriod`를 우선 사용합니다. 수면·컨디션 점수는 Google/Fitbit의 공식 점수가 아니라 앱의 **추정치**입니다. HRV나 안정시 심박수의 개인 기준선이 부족하면 컨디션 점수를 표시하지 않습니다. 이전의 가상 Whoop Strain 값은 제거했습니다.
+화면의 수면효율은 `sleep.summary.minutesAsleep / sleep.summary.minutesInSleepPeriod`로 앱이 계산합니다. Google 내부 효율은 수면 단계가 최종 처리되기 전의 수면시간/침대에 머문 시간으로 계산될 수 있어 완전히 같다고 보장하지 않습니다. 수면·컨디션 점수도 Google/Fitbit 공식 점수가 아니라 앱의 **추정치**입니다. HRV나 안정시 심박수의 개인 기준선이 부족하면 컨디션 점수를 표시하지 않습니다.
 
 ## 호스팅 상태
 
