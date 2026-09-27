@@ -404,7 +404,7 @@
 
   function baseline(values) {
     const valid = values.filter(Number.isFinite);
-    if (valid.length < 3) return null;
+    if (valid.length < 7) return null;
     return valid.reduce((sum, value) => sum + value, 0) / valid.length;
   }
 
@@ -413,7 +413,7 @@
       { name: "sleep", weight: 0.60, score: day.sleep_score_estimate }
     ];
 
-    const hrvBase = baseline(priorDays.slice(-14).map(d => d.hrv_ms));
+    const hrvBase = baseline(priorDays.slice(-30).map(d => d.hrv_ms));
     if (Number.isFinite(day.hrv_ms) && Number.isFinite(hrvBase) && hrvBase > 0) {
       const hrvScore = clamp(80 + ((day.hrv_ms / hrvBase) - 1) * 100, 40, 100);
       components.push({ name: "hrv", weight: 0.25, score: hrvScore });
@@ -422,7 +422,7 @@
       day.hrv_baseline_ms = null;
     }
 
-    const rhrBase = baseline(priorDays.slice(-14).map(d => d.resting_hr_bpm));
+    const rhrBase = baseline(priorDays.slice(-30).map(d => d.resting_hr_bpm));
     if (Number.isFinite(day.resting_hr_bpm) && Number.isFinite(rhrBase) && rhrBase > 0) {
       const rhrScore = clamp(80 + ((rhrBase / day.resting_hr_bpm) - 1) * 100, 40, 100);
       components.push({ name: "rhr", weight: 0.15, score: rhrScore });
@@ -684,7 +684,7 @@
         sleep_score: "MySleepCoach 추정치: 수면시간 50, 취침시각 규칙성 30(이전 7일 이상), 깨어남·뒤척임 20 가중. 이전 기록이 부족하면 사용 가능한 항목만 재가중합니다. Apple의 공개 평가 범주와 비중을 참고했고 세부 점수 곡선은 앱 자체 규칙입니다. Google/Fitbit/Apple 공식 점수가 아닙니다.",
         sleep_efficiency: "API 반환값 summary.minutesAsleep / summary.minutesInSleepPeriod로 앱이 계산한 비율입니다. Google 공식 수면 효율과 같다고 보장하지 않습니다.",
         google_sleep_score: "Google Health 공식 수면점수에는 수면시간, 안정된 잠까지 걸린 시간, 잠의 안정성, 뒤척임과 각성 등이 반영됩니다. 공개되지 않은 가중치는 임의로 만들지 않았습니다.",
-        readiness_score: "추정치: 수면 점수 60%, 개인 14일 기준선 대비 HRV 25%, 안정시 심박수 15%. 사용 가능한 항목만 재가중합니다.",
+        readiness_score: "MySleepCoach 추정치: 수면 점수 60%, 이전 최대 30일의 HRV 기준선 대비 25%, 안정시 심박수 기준선 대비 15%. 생체지표별 이전 기록이 최소 7일 있어야 사용하며, 사용 가능한 항목만 재가중합니다. Google 공식 Readiness 점수가 아닙니다.",
         sleep_debt: "추정치: 최근 최대 14일의 목표 수면 대비 부족분을 지수 가중 평균합니다.",
         native_scores_available: false,
         raw_records_persisted: false

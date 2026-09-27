@@ -106,8 +106,23 @@ assert(api.sleepScoreEstimate(disrupted, 8, []) < api.sleepScoreEstimate(equalDu
 assert.strictEqual(metrics.metric_methodology.sleep_score.includes("Google/Fitbit/Apple 공식 점수가 아닙니다"), true);
 assert.strictEqual(metrics.today.hrv_ms, 45);
 assert.strictEqual(metrics.today.resting_hr_bpm, 58);
-assert(metrics.today.readiness_source.includes("HRV"));
-assert(Number.isFinite(metrics.today.resting_hr_baseline_bpm));
+assert.strictEqual(metrics.today.condition_score, null, "four days are insufficient for a personal baseline");
+const eightDays = Array.from({ length: 8 }, (_, index) => {
+  const day = String(21 + index).padStart(2, "0");
+  const prior = String(20 + index).padStart(2, "0");
+  return sleepPoint(`2026-09-${day}`, `2026-09-${prior}T14:00:00Z`, `2026-09-${prior}T22:00:00Z`, 480, 430);
+});
+const eightHrv = eightDays.map((_, index) => ({ dailyHeartRateVariability: {
+  date: gdate(`2026-09-${String(21 + index).padStart(2, "0")}`),
+  averageHeartRateVariabilityMilliseconds: 40 + index
+} }));
+const eightRhr = eightDays.map((_, index) => ({ dailyRestingHeartRate: {
+  date: gdate(`2026-09-${String(21 + index).padStart(2, "0")}`), beatsPerMinute: String(60 - index / 2)
+} }));
+const mature = api.calculateMetrics(eightDays, [], eightHrv, eightRhr, 8);
+assert(Number.isFinite(mature.today.condition_score), "readiness estimate should appear after seven prior nights");
+assert(mature.today.readiness_source.includes("HRV"));
+assert(Number.isFinite(mature.today.resting_hr_baseline_bpm));
 assert.strictEqual(metrics.metric_methodology.native_scores_available, false);
 assert.strictEqual(metrics.metric_methodology.raw_records_persisted, false);
 assert(!("day_strain" in metrics.today), "fabricated strain must not exist");
