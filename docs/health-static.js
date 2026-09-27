@@ -246,7 +246,17 @@
 
       const summary = sleep.summary || {};
       const summaryStageTotals = stageMinutesFromSummary(summary);
-      const stageTotals = Object.keys(summaryStageTotals).length ? summaryStageTotals : stageTotalsFromSegments;
+      const plausibleStages = totals => {
+        const sleepStages = [totals.DEEP, totals.REM, totals.LIGHT].filter(Number.isFinite);
+        return !sleepStages.length || sleepStages.reduce((sum, minutes) => sum + minutes, 0) <= Math.max(1, asNumber(summary.minutesAsleep) ?? intervalMinutes) * 1.05;
+      };
+      let stageTotals = Object.keys(summaryStageTotals).length ? summaryStageTotals : stageTotalsFromSegments;
+      let stageDataWarning = null;
+      if (!plausibleStages(stageTotals)) {
+        const usableSegments = Object.keys(stageTotalsFromSegments).length && plausibleStages(stageTotalsFromSegments);
+        stageTotals = usableSegments ? stageTotalsFromSegments : {};
+        if (!usableSegments) stageDataWarning = "Google Health 수면 단계 합계가 총 수면시간보다 커서 단계 비율을 표시하지 않습니다.";
+      }
       const intervalMinutes = (end - start) / 60000;
 
       const minutesInSleepPeriod = asNumber(summary.minutesInSleepPeriod);
@@ -314,6 +324,7 @@
         efficiency,
         efficiency_source: "MySleepCoach: summary.minutesAsleep / summary.minutesInSleepPeriod",
         efficiency_is_official_google_score: false,
+        stage_data_warning: stageDataWarning,
         minutes_to_fall_asleep: asNumber(summary.minutesToFallAsleep),
         minutes_after_wakeup: asNumber(summary.minutesAfterWakeUp),
         restless_minutes: Number.isFinite(stageTotals.RESTLESS) ? stageTotals.RESTLESS : 0,
@@ -603,6 +614,7 @@
       minutes_to_fall_asleep: session.minutes_to_fall_asleep,
       minutes_after_wakeup: session.minutes_after_wakeup,
       efficiency: session.efficiency,
+      stage_data_warning: session.stage_data_warning,
       exponential_debt_hours: session.exponential_debt_hours,
       exponential_debt_hm: session.exponential_debt_hm,
       daily_balance_hours: session.daily_balance_hours,
@@ -662,6 +674,7 @@
         minutes_to_fall_asleep: latest.minutes_to_fall_asleep,
         minutes_after_wakeup: latest.minutes_after_wakeup,
         sleep_efficiency: latest.efficiency,
+        stage_data_warning: latest.stage_data_warning,
         device_name: latest.device,
         hypnogram: latest.hypnogram,
         metric_notice: "수면·컨디션 점수는 Google/Fitbit 공식 점수가 아니라 MySleepCoach의 투명한 추정치입니다."

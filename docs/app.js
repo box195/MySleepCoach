@@ -212,6 +212,9 @@ document.addEventListener('DOMContentLoaded', () => {
       adviceEl.textContent = `${today.metric_notice || '점수는 추정치입니다.'} ${hrvText}, ${rhrText}.`;
     }
 
+    const stageTotal = [today.deep_hours, today.rem_hours, today.light_hours]
+      .filter(Number.isFinite).reduce((sum, hours) => sum + hours, 0);
+    const invalidStages = Boolean(today.stage_data_warning) || stageTotal > (today.today_sleep_hours || 0) * 1.05;
     const stageItems = [
       ['deep', today.deep_pct, today.deep_hm],
       ['rem', today.rem_pct, today.rem_hm],
@@ -220,9 +223,9 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
     stageItems.forEach(([name, pct, hm]) => {
       const seg = document.getElementById(`quick-seg-${name}`);
-      if (seg) seg.style.width = `${Number.isFinite(pct) ? pct : 0}%`;
+      if (seg) seg.style.width = `${!invalidStages && Number.isFinite(pct) ? pct : 0}%`;
       const text = document.getElementById(`quick-${name}-text`);
-      if (text) text.textContent = Number.isFinite(pct) ? `${hm} (${pct}%)` : '데이터 없음';
+      if (text) text.textContent = invalidStages && name !== 'awake' ? '수면 단계 합계 불일치' : Number.isFinite(pct) ? `${hm} (${pct}%)` : '데이터 없음';
     });
 
     document.getElementById('circadian-wake-ref').textContent = `기상 ${today.wake_time} 기준`;
@@ -289,9 +292,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const tooltipTime = document.getElementById('tooltip-stage-time');
 
     document.getElementById('hypno-time-range').textContent = `${today.bed_time} ~ ${today.wake_time} (${today.today_sleep_hm})`;
-    document.getElementById('detail-deep-val').textContent = `${today.deep_hm} (${today.deep_pct}%)`;
-    document.getElementById('detail-rem-val').textContent = `${today.rem_hm} (${today.rem_pct}%)`;
-    document.getElementById('detail-light-val').textContent = `${today.light_hm} (${today.light_pct}%)`;
+    const stageTotal = [today.deep_hours, today.rem_hours, today.light_hours]
+      .filter(Number.isFinite).reduce((sum, hours) => sum + hours, 0);
+    const invalidStages = Boolean(today.stage_data_warning) || stageTotal > (today.today_sleep_hours || 0) * 1.05;
+    document.getElementById('detail-deep-val').textContent = invalidStages ? '합계 불일치' : `${today.deep_hm} (${today.deep_pct ?? '-'}%)`;
+    document.getElementById('detail-rem-val').textContent = invalidStages ? '합계 불일치' : `${today.rem_hm} (${today.rem_pct ?? '-'}%)`;
+    document.getElementById('detail-light-val').textContent = invalidStages ? '합계 불일치' : `${today.light_hm} (${today.light_pct ?? '-'}%)`;
     document.getElementById('detail-awake-val').textContent = `${today.awake_hm} (${today.awake_pct ?? 0}%)`;
 
     const stages = today.hypnogram || [];

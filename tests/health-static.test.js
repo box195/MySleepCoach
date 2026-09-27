@@ -92,6 +92,14 @@ assert.strictEqual(parsed[0].efficiency, 88, "420/480 must be 88%, not 98-99%");
 assert.strictEqual(parsed[1].asleep_minutes, 390, "CLASSIC summary.minutesAsleep must be used");
 assert.strictEqual(parsed[1].efficiency, 81);
 assert.strictEqual(parsed[1].deep_pct, null, "CLASSIC data must not fabricate deep sleep");
+const inconsistent = api.parseSleepSessions([sleepPoint(
+  "2026-09-25", "2026-09-24T14:00:00Z", "2026-09-24T22:00:00Z", 480, 420,
+  { stagesSummary: [
+    { type: "LIGHT", minutes: 630 }, { type: "DEEP", minutes: 90 }, { type: "REM", minutes: 60 }
+  ] }
+)])[0];
+assert.strictEqual(inconsistent.light_pct, null, "impossible stage totals must not be presented as percentages");
+assert(inconsistent.stage_data_warning);
 assert.strictEqual(api.parseSleepSessions([{
   sleep: { interval: { startTime: "2026-09-24T14:00:00Z", endTime: "2026-09-24T22:00:00Z" } }
 }]).length, 0, "a session without asleep minutes must not become zero-efficiency sleep");
