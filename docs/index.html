@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>MySleepCoach | 정밀 수면 & 생체리듬 슈퍼 대시보드</title>
-  <meta name="description" content="Google Fitbit Air와 Google Health API 기반 104일 누적 빅데이터 분석, 구글 헬스 하이프노그램, 애플 헬스 트렌드, Whoop 회복도 및 삼성 헬스 생체리듬 대시보드">
+  <meta name="description" content="Google Health API 기반 수면·HRV·안정시 심박수 대시보드. 수면 점수와 컨디션 점수는 MySleepCoach 추정치이며 Google/Fitbit 공식 점수가 아닙니다.">
   <meta name="theme-color" content="#060911">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -50,21 +50,21 @@
         <div class="pulse-dot"></div>
         <div class="brand-text">
           <span class="brand-title font-heading">MySleepCoach</span>
-          <span class="brand-device" id="device-name">Google Fitbit Air</span>
+          <span class="brand-device" id="device-name">Google Health</span>
         </div>
       </div>
       <div class="header-right">
-        <span class="history-badge" id="total-days-badge">104일 누적</span>
-        <button class="sync-button" id="sync-button" type="button">동기화</button><span class="sync-status" id="sync-status" aria-live="polite"></span><span class="date-badge" id="current-date">2026-09-18</span>
+        <span class="history-badge" id="total-days-badge">기록 없음</span>
+        <button class="sync-button" id="sync-button" type="button">동기화</button><span class="sync-status" id="sync-status" aria-live="polite"></span><span class="date-badge" id="current-date">-</span>
       </div>
     </header>
 
     <!-- ================================================================= -->
-    <!-- TAB 1: 🏠 투데이 요약 (WHOOP RECOVERY & OVERVIEW) -->
+    <!-- TAB 1: 투데이 요약 -->
     <!-- ================================================================= -->
     <main id="tab-today" class="tab-content active">
 
-      <!-- Hero Whoop Style Recovery Gauge Card -->
+      <!-- Derived readiness gauge -->
       <section class="glass-card hero-recovery">
         <div class="gauge-wrapper">
           <svg class="gauge-svg" viewBox="0 0 180 180">
@@ -72,8 +72,8 @@
             <circle id="condition-gauge-path" class="gauge-progress" cx="90" cy="90" r="78" />
           </svg>
           <div class="gauge-center">
-            <span class="gauge-score font-heading" id="condition-score-val">0</span>
-            <span class="gauge-label font-heading">RECOVERY</span>
+            <span class="gauge-score font-heading" id="condition-score-val">-</span>
+            <span class="gauge-label font-heading">READINESS*</span>
           </div>
         </div>
 
@@ -117,50 +117,47 @@
           <div class="metric-sub" id="quick-sleep-window">23:05 ~ 06:52</div>
         </div>
 
-        <!-- Tile 4: Day Strain -->
+        <!-- Tile 4: Derived sleep score -->
         <div class="metric-tile">
           <div class="metric-header">
-            <span>일일 신체부하</span>
-            <span class="metric-icon">🔥</span>
+            <span>수면 점수 (추정)</span>
+            <span class="metric-icon">◉</span>
           </div>
-          <div class="metric-value font-heading" id="quick-strain-val">15.8</div>
+          <div class="metric-value font-heading" id="quick-strain-val">-</div>
           <div class="metric-sub">
-            <span class="badge-tag info" id="quick-strain-target-badge">타깃 14.0~17.5</span>
+            <span class="badge-tag info" id="quick-strain-target-badge">Google/Fitbit 공식 점수 아님</span>
           </div>
         </div>
       </section>
 
-      <!-- Whoop Recovery vs Day Strain Balance Card -->
+      <!-- Transparent derived score card -->
       <section class="glass-card strain-balance-card">
         <div class="section-title">
-          <span>신체 회복도 vs 일일 부하 밸런스</span>
-          <span class="badge-tag success" id="today-balance-status-badge">최적 훈련 밸런스</span>
+          <span>컨디션 & 수면 점수 (추정)</span>
+          <span class="badge-tag info" id="today-balance-status-badge">추정치</span>
         </div>
-
         <div class="balance-bars-wrapper">
           <div class="balance-row">
             <div class="balance-label-col">
-              <span class="lbl">신체 회복도 (충전량)</span>
-              <span class="val font-heading" style="color: var(--accent-emerald);" id="balance-recovery-val">86%</span>
+              <span class="lbl">컨디션 점수 (추정)</span>
+              <span class="val font-heading" style="color: var(--accent-emerald);" id="balance-recovery-val">-</span>
             </div>
             <div class="balance-track">
-              <div class="balance-fill recovery" id="balance-recovery-bar" style="width: 86%;"></div>
+              <div class="balance-fill recovery" id="balance-recovery-bar" style="width: 0%;"></div>
             </div>
           </div>
-
           <div class="balance-row">
             <div class="balance-label-col">
-              <span class="lbl">일일 신체 부하 (소모량)</span>
-              <span class="val font-heading" style="color: var(--accent-purple);" id="balance-strain-val">15.8 / 21</span>
+              <span class="lbl">수면 점수 (추정)</span>
+              <span class="val font-heading" style="color: var(--accent-purple);" id="balance-strain-val">-</span>
             </div>
             <div class="balance-track">
-              <div class="balance-fill strain" id="balance-strain-bar" style="width: 75.2%;"></div>
+              <div class="balance-fill strain" id="balance-strain-bar" style="width: 0%;"></div>
             </div>
           </div>
         </div>
-
         <div class="balance-advice-box" id="balance-advice-text">
-          충전된 신체 회복도(86%)에 딱 맞는 고강도 타깃 부하(14.0~17.5)를 소화하고 있어 오버트레이닝 없이 심폐와 근력이 성장하는 최적 상태입니다.
+          동기화 후 실제 수면·HRV·안정시 심박수 사용 여부와 점수 한계를 표시합니다.
         </div>
       </section>
 
@@ -168,7 +165,7 @@
       <section class="glass-card">
         <div class="section-title">
           <span>어젯밤 수면 단계 구성</span>
-          <span style="font-size: 11px; color: var(--accent-cyan);">구글 헬스 벤치마크</span>
+          <span style="font-size: 11px; color: var(--accent-cyan);">Google Health 기록</span>
         </div>
 
         <div class="stage-bar">
@@ -205,7 +202,7 @@
       <!-- Circadian Energy Curve Timeline -->
       <section class="glass-card">
         <div class="section-title">
-          <span>생체 리듬 24H 에너지 타임라인</span>
+          <span>기상시각 기준 활동 참고 구간</span>
           <span style="font-size: 11px; color: var(--accent-emerald);" id="circadian-wake-ref">기상 06:52 기준</span>
         </div>
         <div id="circadian-timeline-list" class="timeline-list">
@@ -216,7 +213,7 @@
       <!-- Gemini AI Coaching Card -->
       <section class="glass-card ai-card">
         <div class="ai-header">
-          <span class="ai-badge">Gemini 3.8 Flash</span>
+          <span class="ai-badge">비활성</span>
           <span style="font-size: 13px; font-weight: 600;">오늘의 AI 건강 처방</span>
         </div>
         <div class="ai-body" id="ai-briefing-text">
@@ -338,7 +335,7 @@
     </main>
 
     <!-- ================================================================= -->
-    <!-- TAB 3: 📊 누적 트렌드 (APPLE HEALTH & WHOOP TRENDS) -->
+    <!-- TAB 3: 누적 트렌드 -->
     <!-- ================================================================= -->
     <main id="tab-trends" class="tab-content">
 
@@ -350,10 +347,10 @@
         <button class="filter-pill" data-period="all">전체 기록</button>
       </section>
 
-      <!-- Metric Mode Switcher (Sleep vs Strain) -->
+      <!-- Metric Mode Switcher (Sleep vs Readiness) -->
       <section class="metric-mode-group">
         <button class="mode-btn active" id="btn-mode-sleep" data-mode="sleep">💤 수면 & 부채 분석</button>
-        <button class="mode-btn" id="btn-mode-strain" data-mode="strain">🔥 회복도 vs 신체부하 (Whoop)</button>
+        <button class="mode-btn" id="btn-mode-strain" data-mode="readiness">컨디션 & 수면 점수 (추정)</button>
       </section>
 
       <!-- Period Summary Aggregate Card -->
@@ -424,7 +421,7 @@
       <!-- 104-Day Full History Log Table (Expandable) -->
       <section class="glass-card">
         <div class="section-title" style="cursor: pointer;" id="toggle-history-btn">
-          <span>전체 수면 기록 목록 (<span id="table-record-count">104</span>건)</span>
+          <span>전체 수면 기록 목록 (<span id="table-record-count">0</span>건)</span>
           <span style="font-size: 12px; color: var(--accent-cyan);" id="history-toggle-icon">▼ 열기</span>
         </div>
 
@@ -432,13 +429,8 @@
           <table class="history-table">
             <thead>
               <tr>
-                <th>날짜</th>
-                <th>수면시간</th>
-                <th>취침~기상</th>
-                <th>효율</th>
-                <th>수면부채</th>
-                <th>회복도</th>
-                <th>신체부하</th>
+                <th>날짜</th><th>수면시간</th><th>취침~기상</th><th>효율</th>
+                <th>수면부족*</th><th>수면점수*</th><th>컨디션*</th><th>HRV</th><th>안정시 심박수</th>
               </tr>
             </thead>
             <tbody id="history-table-body">
@@ -455,20 +447,18 @@
     <!-- ================================================================= -->
     <main id="tab-science" class="tab-content">
 
-      <!-- Samsung Health Chronotype Animal Card -->
+      <!-- Sleep midpoint estimate -->
       <section class="glass-card chronotype-card">
         <div class="section-title">
-          <span>삼성 헬스 스타일 수면 동물 (크로노타입)</span>
-          <span style="font-size: 11px; color: var(--accent-indigo);">104일간 패턴 분석</span>
+          <span>수면 중간시각 경향 (추정)</span>
+          <span style="font-size: 11px; color: var(--accent-indigo);">최근 최대 30일 기록</span>
         </div>
 
         <div class="chrono-banner">
           <div class="chrono-icon" id="chrono-icon">🐺</div>
           <div class="chrono-info">
-            <div class="chrono-name font-heading" id="chrono-name">밤의 지배자 늑대 🐺</div>
-            <p class="chrono-desc" id="chrono-desc">
-              오후 늦게 활력이 살아나 심야 시간에 고도의 집중력과 몰입을 발휘하는 야행성 크로노타입입니다.
-            </p>
+            <div class="chrono-name font-heading" id="chrono-name">동기화 후 표시</div>
+            <p class="chrono-desc" id="chrono-desc">수면 시간만으로 생체학적 크로노타입을 진단할 수 없습니다.</p>
           </div>
         </div>
       </section>
@@ -481,63 +471,46 @@
         </div>
 
         <div class="consistency-wrapper">
-          <div class="consistency-score font-heading" id="consistency-score-val">40</div>
+          <div class="consistency-score font-heading" id="consistency-score-val">-</div>
           <div style="flex: 1;">
-            <div class="consistency-label" id="consistency-label-val">불규칙 (수면 리듬 교정 필요)</div>
+            <div class="consistency-label" id="consistency-label-val">동기화 후 표시</div>
             <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.4; margin-top: 4px;">
-              기상 시각 표준편차가 <strong id="consistency-std-val">104.9분</strong>으로 측정되었습니다. 취침·기상 시간을 30분 이내로 일정하게 맞추면 낮 동안의 집중력과 멜라토닌 분비가 2배 이상 향상됩니다.
+              최근 기록의 기상 시각 표준편차: <strong id="consistency-std-val">-</strong>. 이 값은 수면 리듬의 참고 지표입니다.
             </p>
           </div>
         </div>
       </section>
 
-      <!-- Interactive Whoop Sleep Need Slider -->
+      <!-- Target sleep simulator -->
       <section class="glass-card">
         <div class="section-title">
-          <span>Whoop 수면 요구량(Sleep Need) 시뮬레이터</span>
+          <span>목표 수면시간 시뮬레이터</span>
           <span id="target-slider-val" style="font-size: 15px; font-weight: 700; color: var(--accent-emerald);">8.0시간</span>
         </div>
         <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 12px;">
-          슬라이더를 조절하면 104일 전체 누적 수면 부채와 일일 회복도가 실시간으로 재계산됩니다.
+          목표 수면시간을 바꾸면 수면부족 추정치와 수면 점수(추정)만 다시 계산합니다. HRV·안정시 심박수 기반 컨디션 점수는 새 Google 동기화 시 계산됩니다.
         </p>
         <div class="slider-wrapper">
           <input type="range" id="target-slider" min="6.0" max="9.5" step="0.5" value="8.0">
         </div>
       </section>
 
-      <!-- Mathematical Principles Card -->
+      <!-- Metric methodology -->
       <section class="glass-card">
-        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">📐 Stanford & Rise 14일 지수감쇠 수면부채 공식</h3>
-        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
-          인간의 중추신경계와 아데노신 수용체는 오래된 피로보다 최근 3일간의 수면 손실에 5배 이상 민감하게 반응합니다.
-        </p>
-
-        <div class="formula-box">
-          Daily Debt = Σ [ e^(-0.15 × d) × max(0, Sleep Need - Effective Sleep_d) ]<br>
-          (d=0 어제 1.00 ➔ d=1 0.86 ➔ d=3 0.64 ➔ d=7 0.35 ➔ d=13 0.14)
-        </div>
-
-        <h3 style="font-size: 16px; font-weight: 700; margin: 18px 0 10px;">🧬 유효 회복 수면 (Effective Sleep Quality)</h3>
-        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
-          단순 누워있던 시간이 아니라, 뇌파가 느려진 깊은 수면과 기억을 정리하는 렘 수면에 가중치를 부여하고, 밤중 깬 시간(각성도)을 페널티로 감점합니다.
-        </p>
-
-        <div class="formula-box">
-          Effective Sleep = Actual Sleep × (Efficiency / 100) ×<br>
-          [ 1.0 + 0.25 × (Deep/Total) + 0.15 × (REM/Total) - 0.20 × (Awake/BedTime) ]
-        </div>
-
-        <h3 style="font-size: 16px; font-weight: 700; margin: 18px 0 10px;">🔥 Whoop 일일 신체부하(Day Strain 0~21)와 회복도 밸런스</h3>
-        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
-          <strong>신체 회복도 (Recovery 0~100%)</strong>는 어젯밤 수면으로 채워진 내 몸의 배터리 잔량이며, <strong>일일 신체 부하 (Day Strain 0~21)</strong>는 오늘 하루 심폐와 근육에 가해진 총 스트레스 소모량입니다.
+        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">계산 방법과 한계</h3>
+        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.55;">
+          수면 효율은 Google Health의 수면 summary가 제공하는 <strong>minutesAsleep / minutesInSleepPeriod × 100</strong>을 우선 사용합니다.
+          겹치는 소스는 reconcile 결과를 사용하고, 하루에 여러 수면이 있으면 낮잠보다 주 수면을 우선합니다.
         </p>
         <div class="formula-box">
-          • 0.0 ~ 9.9 : 가벼운 일상 / 능동적 회복 (Light)<br>
-          • 10.0 ~ 13.9 : 적정 일상 / 기초 체력 유지 (Moderate)<br>
-          • 14.0 ~ 17.9 : 고강도 운동 / 심폐 및 근력 강화 (Strenuous)<br>
-          • 18.0 ~ 21.0 : 한계 돌파 / 극한 피로 유발 (All-out)<br>
-          *회복도가 80% 이상일 때 고강도(14.0+)를 주는 것이 오버트레이닝 없이 체력을 키우는 최적의 공식입니다.
+          수면 점수(추정) = 목표 수면시간 달성도 65% + 수면 효율 35%<br>
+          컨디션 점수(추정) = 수면 점수 60% + 개인 14일 HRV 기준선 25% + 개인 14일 안정시 심박수 기준선 15%<br>
+          * 사용할 수 없는 생체지표는 제외하고 남은 항목의 가중치를 다시 정규화합니다.
         </div>
+        <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-top: 12px;">
+          Google Health API에서 별도의 공식 수면 점수나 readiness/condition 점수 데이터 타입은 사용하지 않습니다.
+          화면의 별표(*) 점수는 MySleepCoach가 만든 참고용 추정치이며 의료 판단이나 Google/Fitbit 공식 점수가 아닙니다.
+        </p>
       </section>
 
     </main>

@@ -32,7 +32,10 @@ GitHub Pages 설정과 저장소 공개 범위는 별도로 관리합니다.
 
 ```text
 https://www.googleapis.com/auth/googlehealth.sleep.readonly
+https://www.googleapis.com/auth/googlehealth.health_metrics_and_measurements.readonly
 ```
+
+두 번째 권한은 일일 HRV와 안정시 심박수에 사용합니다. 사용자가 이를 허용하지 않으면 수면만 동기화하고 컨디션 점수는 자료 부족으로 표시합니다. 새 권한을 처음 요청할 때 Google 동의 화면이 나올 수 있습니다.
 
 `FETCH_STEPS: true`이면 추가 요청:
 
@@ -43,8 +46,10 @@ https://www.googleapis.com/auth/googlehealth.activity_and_fitness.readonly
 사용 endpoint:
 
 ```text
-GET https://health.googleapis.com/v4/users/me/dataTypes/sleep/dataPoints
-GET https://health.googleapis.com/v4/users/me/dataTypes/steps/dataPoints
+GET https://health.googleapis.com/v4/users/me/dataTypes/sleep/dataPoints:reconcile
+GET https://health.googleapis.com/v4/users/me/dataTypes/daily-heart-rate-variability/dataPoints:reconcile
+GET https://health.googleapis.com/v4/users/me/dataTypes/daily-resting-heart-rate/dataPoints:reconcile
+GET https://health.googleapis.com/v4/users/me/dataTypes/steps/dataPoints:reconcile (선택)
 ```
 
 `nextPageToken`이 존재하는 동안 `pageToken`으로 다음 페이지를 계속 조회합니다.
@@ -55,15 +60,24 @@ GET https://health.googleapis.com/v4/users/me/dataTypes/steps/dataPoints
 
 - refresh token을 브라우저에 저장하지 않습니다.
 - access token을 `localStorage`, `sessionStorage`, 쿠키, 파일, Git 저장소에 저장하지 않습니다.
-- Health 원본과 계산 결과도 브라우저 저장소에 저장하지 않습니다.
-- 새로고침하면 메모리 데이터가 사라지므로 다시 **동기화**를 눌러야 합니다.
+- Health 원본은 브라우저 저장소에 저장하지 않습니다. 화면에 표시할 계산 결과는 해당 기기의 `localStorage`에 마지막 동기화본으로 저장합니다.
+- 새로고침·재방문 때 마지막 동기화 화면이 바로 보입니다. 최신 데이터를 받으려면 **동기화**를 누르세요. 브라우저 데이터 삭제, 비공개 모드, 다른 기기에서는 저장 화면이 공유되지 않습니다.
+- Google은 승인된 권한을 계정에 기억할 수 있지만, 짧게 유효한 access token은 매 동기화 때 새로 발급됩니다. 계정 로그인 상태나 새 권한 요청에 따라 Google 화면이 다시 나타날 수 있습니다.
+- 이 기기를 함께 쓰는 사람이 있다면 브라우저의 사이트 데이터에서 `box195.github.io`의 저장 데이터를 삭제하세요.
 
 ## 정적 모드에서 비활성화된 기능
 
 Gemini AI 코칭과 카카오 알림은 서버 비밀키/토큰이 필요한 기능이라 정적 모드에서는 호출하지 않고 화면에 비활성 상태를 표시합니다.
 
-Strain은 실제 Whoop 센서 값이 아니라 기존 수면 계산식의 **추정 지표**입니다. 기존 코드의 고정 최신값 `15.8`은 제거했습니다. steps를 허용하면 최신 수면 날짜의 실제 step 합계는 가져오지만 현재 대시보드의 Strain 자체를 실제 Whoop 값으로 취급하지 않습니다.
+수면효율은 Google Health의 `sleep.summary.minutesAsleep / sleep.summary.minutesInSleepPeriod`를 우선 사용합니다. 수면·컨디션 점수는 Google/Fitbit의 공식 점수가 아니라 앱의 **추정치**입니다. HRV나 안정시 심박수의 개인 기준선이 부족하면 컨디션 점수를 표시하지 않습니다. 이전의 가상 Whoop Strain 값은 제거했습니다.
 
 ## 호스팅 상태
 
-`docs/`는 상대 경로 자산을 사용하도록 준비했습니다. 현재 private 저장소의 GitHub Pages 사용 가능 여부는 계정/플랜 설정에 따르며, 이번 변경에서는 visibility나 Pages 설정을 건드리지 않았습니다.
+`docs/`는 상대 경로 자산을 사용합니다. GitHub Pages 주소는 `https://box195.github.io/MySleepCoach/`입니다.
+
+## 참고 문서
+
+- [Google Identity Services 토큰 모델](https://developers.google.com/identity/oauth2/web/guides/use-token-model)
+- [Google Health 수면 데이터와 효율](https://developers.google.com/health/data-types/sleep)
+- [Google Health 데이터 포인트 구조](https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints)
+- [Reconcile API](https://developers.google.com/health/reference/rest/v4/users.dataTypes.dataPoints/reconcile)
