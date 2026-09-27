@@ -395,50 +395,29 @@
   function sleepScoreEstimate(day, targetHours, priorDays) {
     // Transparent app-specific score. The displayed sleep-efficiency percentage
     // remains an observation and is intentionally not used as a score input.
-    const target = Math.max(0.1, targetHours);
-    const deficitHours = Math.max(0, target - day.asleep_hours);
-    const excessHours = Math.max(0, day.asleep_hours - target);
-    const durationScore = clamp(100 - deficitHours * 18 - excessHours * 6, 0, 100);
-
+    const durationScore = clamp((day.asleep_hours / Math.max(0.1, targetHours)) * 100, 0, 100);
     const awakeMinutes = Math.max(0, (day.awake_hours || 0) * 60);
-    const restlessMinutes = Math.max(0, day.restless_minutes || 0);
-    const extraAwakenings = Math.max(0, (day.awake_segments || 0) - 1);
-    const latencyExcess = Math.max(0, (day.minutes_to_fall_asleep || 0) - 15);
-    const afterWakeExcess = Math.max(0, (day.minutes_after_wakeup || 0) - 10);
-    const continuityPenalty =
-      awakeMinutes * 0.65 +
-      restlessMinutes * 0.45 +
-      extraAwakenings * 4 +
-      latencyExcess * 0.6 +
-      afterWakeExcess * 0.4;
-    const continuityScore = clamp(100 - continuityPenalty, 0, 100);
-
-    const parts = [
-      { weight: 55, score: durationScore },
-      { weight: 30, score: continuityScore }
-    ];
-
-    if (priorDays.length >= 3) {
+    const interrupted = awakeMinutes + Math.max(0, day.restless_minutes || 0);
+    const interruptionScore = clamp(100 - 200 * interrupted / Math.max(1, day.bed_minutes)
+      - Math.max(0, (day.awake_segments || 0) - 1) * 2, 0, 100);
+    const parts = [{ weight: 50, score: durationScore }, { weight: 20, score: interruptionScore }];
+    if (priorDays.length >= 7) {
       const current = day.bedtime_minutes;
       const shifts = priorDays.slice(-13).map(previous => {
         const difference = Math.abs(current - previous.bedtime_minutes);
         return Math.min(difference, 1440 - difference);
       });
       const averageShift = shifts.reduce((sum, value) => sum + value, 0) / shifts.length;
-      parts.push({ weight: 15, score: clamp(100 - averageShift * 0.6, 0, 100) });
+      parts.push({ weight: 30, score: clamp(100 - averageShift / 3, 0, 100) });
     }
 
     let score = parts.reduce((sum, part) => sum + part.weight * part.score, 0)
-      / parts.reduce((sum, part) => sum + part.weight, 0) - 5;
+      / parts.reduce((sum, part) => sum + part.weight, 0) - 3;
 
     // Acute caps prevent a clearly bad night from being masked by another strong component.
     if (day.asleep_hours < 5) score = Math.min(score, 55);
     else if (day.asleep_hours < 6) score = Math.min(score, 70);
     if (awakeMinutes >= 45) score = Math.min(score, 75);
-    const disruptionMinutes = awakeMinutes + restlessMinutes;
-    if (disruptionMinutes >= 120) score = Math.min(score, 55);
-    else if (disruptionMinutes >= 90) score = Math.min(score, 65);
-
     return Math.round(clamp(score, 0, 100));
   }
 
@@ -784,7 +763,7 @@
         active_minutes: null
       },
       metric_methodology: {
-        sleep_score: "MySleepCoach 개인 보정 추정치. 수면시간 55%, 수면 연속성(깨어 있음·뒤척임·각성 횟수·입면 지연) 30%, 취침시각 규칙성 15%에서 개인 보정 5점을 뺍니다. 5시간 미만은 최대 55점, 6시간 미만은 최대 70점, 깨어 있음 45분 이상은 최대 75점입니다. 표시되는 수면 효율은 점수 입력으로 사용하지 않습니다. Google/Fitbit/Apple 공식 점수가 아닙니다.",
+        sleep_score: "MySleepCoach 개인 보정 추정치. 수면시간 50%, 취침시각 규칙성 30%(이전 7일 이상), 깨어남·뒤척임 20%를 가중해 3점을 보정합니다. 5시간 미만은 최대 55점, 6시간 미만은 최대 70점, 깨어 있음 45분 이상은 최대 75점입니다. 표시되는 수면 효율은 점수 입력으로 사용하지 않습니다. Google/Fitbit/Apple 공식 점수가 아닙니다.",
         sleep_efficiency: "관찰값: Google Health sleep.summary.minutesAsleep / sleep.summary.minutesInSleepPeriod × 100으로 별도 계산·표시합니다. 이 비율을 수면 점수에 맞추거나 보정하지 않습니다.",
         google_sleep_score: "Google/Fitbit 공식 Sleep Score의 세부 가중치는 공개되지 않았습니다. MySleepCoach 수면 점수는 별도 계산한 참고용 추정치입니다.",
         readiness_score: "개인 보정 추정치. 최근 7일 평균 수면으로 기본값을 정하고, 당일 및 최근 3일 HRV 하락과 최근 3일 안정시 심박 상승을 최대 30일 개인 기준선과 비교해 감점합니다. 14일 공식 점수와 같은 날짜 앱 입력을 대조해 조정했지만 향후 정확도를 보장하거나 Google 공식 계산식을 복제하지 않습니다.",

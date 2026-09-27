@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function saveDashboardSnapshot(data) {
     try {
       localStorage.setItem(DASHBOARD_CACHE_KEY, JSON.stringify({
-        version: 3,
+        version: 4,
         saved_at: new Date().toISOString(),
         data
       }));
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const cached = JSON.parse(localStorage.getItem(DASHBOARD_CACHE_KEY) || 'null');
       const data = cached?.data;
       if (!data?.today || !Array.isArray(data?.all_history) || !data.all_history.length) return false;
-      if (cached.version !== 3 && window.MySleepCoachStatic?.recalculateDashboardScores(data)) {
+      if (cached.version !== 4 && window.MySleepCoachStatic?.recalculateDashboardScores(data)) {
         saveDashboardSnapshot(data);
       }
       appData = data;
