@@ -128,6 +128,16 @@ assert.strictEqual(api.calculateMetrics(sleep, [], [], [], 8).today.condition_sc
   assert(calls[0].includes("dataPoints:reconcile"));
   assert(calls[1].includes("pageToken=next"));
 
+  const fallbackCalls = [];
+  context.fetch = async url => {
+    fallbackCalls.push(url);
+    if (url.includes("dataPoints:reconcile")) throw new TypeError("Failed to fetch");
+    return { ok: true, json: async () => ({ dataPoints: [{ name: "fallback" }] }) };
+  };
+  const fallback = await api.fetchAllDataPoints("synthetic-token", "sleep", true);
+  assert.strictEqual(fallback[0].name, "fallback");
+  assert.strictEqual(fallbackCalls.length, 2, "reconcile failure should retry ordinary list once");
+
   context.window.MY_SLEEP_COACH_CONFIG = { GOOGLE_CLIENT_ID: "synthetic-client", FETCH_STEPS: false };
   const grantedScopes = new Set([context.window.MySleepCoachStatic.scopes.sleep]);
   context.google = context.window.google = {

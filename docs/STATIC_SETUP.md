@@ -52,7 +52,7 @@ GET https://health.googleapis.com/v4/users/me/dataTypes/daily-resting-heart-rate
 GET https://health.googleapis.com/v4/users/me/dataTypes/steps/dataPoints:reconcile (선택)
 ```
 
-`nextPageToken`이 존재하는 동안 `pageToken`으로 다음 페이지를 계속 조회합니다.
+`nextPageToken`이 존재하는 동안 `pageToken`으로 다음 페이지를 계속 조회합니다. `reconcile` 요청이 실패하면 일반 `dataPoints` 목록으로 한 번 재시도하고, 화면에서는 같은 날짜의 주 수면을 우선 선택합니다.
 
 ## 사용자 동작과 저장 정책
 

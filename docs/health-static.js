@@ -67,7 +67,7 @@
     });
   }
 
-  async function fetchAllDataPoints(accessToken, dataType, reconcile = true) {
+  async function fetchPages(accessToken, dataType, reconcile) {
     const points = [];
     let pageToken = "";
 
@@ -100,6 +100,19 @@
     } while (pageToken);
 
     return points;
+  }
+
+  async function fetchAllDataPoints(accessToken, dataType, reconcile = true) {
+    if (!reconcile) return fetchPages(accessToken, dataType, false);
+    try {
+      return await fetchPages(accessToken, dataType, true);
+    } catch (reconcileError) {
+      try {
+        return await fetchPages(accessToken, dataType, false);
+      } catch (listError) {
+        throw new Error(`${dataType} 조회 실패: reconcile 및 일반 조회 모두 실패했습니다. ${listError.message}`);
+      }
+    }
   }
 
   const round = (value, digits = 2) => {
