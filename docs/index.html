@@ -210,15 +210,15 @@
         </div>
       </section>
 
-      <!-- Gemini AI Coaching Card -->
+      <!-- Local rule-based coaching card -->
       <section class="glass-card ai-card">
         <div class="ai-header">
-          <span class="ai-badge">비활성</span>
-          <span style="font-size: 13px; font-weight: 600;">오늘의 AI 건강 처방</span>
+          <span class="ai-badge">기기 내 계산</span>
+          <span style="font-size: 13px; font-weight: 600;">오늘의 로컬 맞춤 조언</span>
         </div>
         <div class="ai-body" id="ai-briefing-text">
-          <div id="static-mode-disclosure" class="static-mode-disclosure">정적 모드: Gemini AI 코칭 · 카카오 알림 비활성</div>
-          AI 맞춤 분석 브리핑을 불러오는 중입니다...
+          <div id="static-mode-disclosure" class="static-mode-disclosure">기기 내 규칙 계산 · 외부 전송 없음 · 생성형 AI 아님</div>
+          동기화 후 수면·컨디션 관찰값에 맞춘 생활 조언을 표시합니다.
         </div>
       </section>
 
@@ -503,9 +503,9 @@
           겹치는 소스는 reconcile 결과를 사용하고, 하루에 여러 수면이 있으면 낮잠보다 주 수면을 우선합니다.
         </p>
         <div class="formula-box">
-          수면 점수(추정) = 수면시간 50% + 취침시각 규칙성 30% + 깨어남·뒤척임 20% (Apple 공개 비중을 참고한 앱 자체 계산)<br>
-          컨디션 점수(추정) = 수면 점수 60% + 개인 최대 30일 HRV 기준선 25% + 개인 최대 30일 안정시 심박수 기준선 15%<br>
-          * 규칙성은 이전 7일 이상 기록이 있어야 적용합니다. HRV·안정시 심박수는 지표별 이전 7일 이상 기록이 있어야 적용하고, 사용할 수 없는 항목을 제외한 뒤 나머지 가중치를 다시 정규화합니다.
+          수면 점수(개인 보정 추정) = 수면시간 55% + 깨어남·뒤척임 등 수면 연속성 30% + 취침시각 규칙성 15%에서 5점 보정. 5시간 미만은 최대 55점, 6시간 미만은 최대 70점, 깨어 있음 45분 이상은 최대 75점입니다.<br>
+          컨디션 점수(개인 보정 추정) = 최근 7일 평균 수면을 기본으로 당일·최근 3일 HRV 하락과 최근 3일 안정시 심박 상승을 개인 최대 30일 기준선과 비교해 감점합니다.<br>
+          * 2026년 9월 13~26일에 제공된 Google 점수와 같은 날짜의 앱 요약값을 대조해 조정했습니다. 이 기간의 오차만 확인했으며 Google 계산식을 알아낸 것은 아닙니다. 생체 지표의 이전 기록이 7일 미만이면 컨디션 점수를 표시하지 않습니다.
         </div>
         <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-top: 12px;">
           Google Health API에서 별도의 공식 수면 점수나 readiness/condition 점수 데이터 타입은 사용하지 않습니다.
@@ -539,9 +539,9 @@
 
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script src="./config.js?v=1ea11d8"></script>
-  <script src="./health-static.js?v=1ea11d8"></script>
+  <script src="./health-static.js?v=calibration-20260927"></script>
   <script src="./wearables.js?v=1ea11d8"></script>
-  <script src="./app.js?v=1ea11d8"></script>
+  <script src="./app.js?v=calibration-20260927"></script>
   <script src="./wearables-ui.js?v=1ea11d8"></script>
 </body>
 </html>

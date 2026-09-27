@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function saveDashboardSnapshot(data) {
     try {
       localStorage.setItem(DASHBOARD_CACHE_KEY, JSON.stringify({
-        version: 2,
+        version: 3,
         saved_at: new Date().toISOString(),
         data
       }));
@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const cached = JSON.parse(localStorage.getItem(DASHBOARD_CACHE_KEY) || 'null');
       const data = cached?.data;
       if (!data?.today || !Array.isArray(data?.all_history) || !data.all_history.length) return false;
+      if (cached.version !== 3 && window.MySleepCoachStatic?.recalculateDashboardScores(data)) {
+        saveDashboardSnapshot(data);
+      }
       appData = data;
       currentTargetHours = data.today.target_sleep_hours || 8.0;
       initApp(data);
@@ -59,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const aiBriefingEl = document.getElementById('ai-briefing-text');
     if (aiBriefingEl) {
-      aiBriefingEl.textContent = '정적 모드에서는 Gemini API 키를 브라우저에 넣지 않으므로 AI 코칭을 사용하지 않습니다.';
+      aiBriefingEl.textContent = '동기화 후 이 카드에 기기 내 규칙으로 계산한 생활 조언이 표시됩니다. 생성형 AI를 사용하지 않고 건강 데이터를 외부로 보내지 않습니다.';
     }
   }
 
@@ -233,8 +236,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const aiBriefingEl = document.getElementById('ai-briefing-text');
     if (aiBriefingEl) {
-      aiBriefingEl.textContent = data.ai_briefing ||
-        '브라우저 직접 동기화 모드에서는 Gemini API 키를 저장하지 않아 AI 코칭을 실행하지 않습니다.';
+      aiBriefingEl.textContent = data.local_advice ||
+        '로컬 규칙 기반 조언을 계산할 데이터가 아직 부족합니다. 생성형 AI나 외부 건강 데이터 전송은 사용하지 않습니다.';
     }
   }
 
@@ -661,10 +664,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function recalculateDebtLocally(history, targetH) {
     history.forEach((day, idx) => {
-      const window = history.slice(Math.max(0, idx - 13), idx + 1);
+      const recentWindow = history.slice(Math.max(0, idx - 13), idx + 1);
       let weightedSum = 0;
       let weightSum = 0;
-      [...window].reverse().forEach((past, d) => {
+      [...recentWindow].reverse().forEach((past, d) => {
         const deficit = Math.max(0, targetH - past.asleep_hours);
         const weight = Math.exp(-0.15 * d);
         weightedSum += deficit * weight;

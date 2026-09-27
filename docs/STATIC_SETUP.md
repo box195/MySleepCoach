@@ -62,9 +62,9 @@ POST https://health.googleapis.com/v4/users/me/dataTypes/steps/dataPoints:dailyR
 
 ## 정적 모드에서 비활성화된 기능
 
-Gemini AI 코칭과 카카오 알림은 서버 비밀키/토큰이 필요한 기능이라 정적 모드에서는 호출하지 않고 화면에 비활성 상태를 표시합니다.
+Gemini 생성형 AI와 카카오 알림은 서버 비밀키/토큰이 필요한 기능이라 정적 모드에서는 호출하지 않습니다. 오늘의 조언 카드는 동기화한 수면·컨디션 요약값으로 브라우저 안에서 규칙에 따라 생활 조언을 계산합니다.
 
-화면의 수면효율은 `sleep.summary.minutesAsleep / sleep.summary.minutesInSleepPeriod`로 앱이 계산합니다. Google 내부 효율은 수면 단계가 최종 처리되기 전의 수면시간/침대에 머문 시간으로 계산될 수 있어 완전히 같다고 보장하지 않습니다. 수면·컨디션 점수도 Google/Fitbit 공식 점수가 아니라 앱의 **추정치**입니다. HRV나 안정시 심박수의 개인 기준선이 부족하면 컨디션 점수를 표시하지 않습니다.
+화면의 수면효율은 `sleep.summary.minutesAsleep / sleep.summary.minutesInSleepPeriod`로 앱이 계산합니다. Google 내부 효율은 수면 단계가 최종 처리되기 전의 수면시간/침대에 머문 시간으로 계산될 수 있어 완전히 같다고 보장하지 않습니다. 수면·컨디션 점수도 Google/Fitbit 공식 점수가 아니라 앱의 **추정치**입니다. 컨디션 점수는 제공된 2026-09-13~09-26 공식 점수와 같은 날짜의 앱 요약값을 대조해 개인 보정했으며, 다른 날짜에서의 정확도는 아직 검증되지 않았습니다. HRV나 안정시 심박수의 개인 기준선이 부족하면 컨디션 점수를 표시하지 않습니다.
 
 ## 호스팅 상태
 

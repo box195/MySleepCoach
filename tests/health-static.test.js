@@ -131,6 +131,22 @@ const mature = api.calculateMetrics(eightDays, [], eightHrv, eightRhr, 8);
 assert(Number.isFinite(mature.today.condition_score), "readiness estimate should appear after seven prior nights");
 assert(mature.today.readiness_source.includes("HRV"));
 assert(Number.isFinite(mature.today.resting_hr_baseline_bpm));
+const steadyDays = Array.from({ length: 30 }, () => ({
+  asleep_hours: 8, hrv_ms: 55, resting_hr_bpm: 60
+}));
+const steady = api.readinessEstimate({
+  asleep_hours: 8, hrv_ms: 55, resting_hr_bpm: 60
+}, steadyDays);
+const strained = api.readinessEstimate({
+  asleep_hours: 8, hrv_ms: 38, resting_hr_bpm: 64
+}, steadyDays);
+assert(strained.score <= steady.score - 30, "poor biometrics must visibly lower readiness despite long sleep");
+const rebound = api.readinessEstimate({
+  asleep_hours: 8, hrv_ms: 55, resting_hr_bpm: 64
+}, [...steadyDays.slice(2),
+  { asleep_hours: 8, hrv_ms: 40, resting_hr_bpm: 64 },
+  { asleep_hours: 8, hrv_ms: 38, resting_hr_bpm: 64 }]);
+assert(rebound.score < steady.score - 15, "one recovered HRV day must not erase a recent low trend");
 assert.strictEqual(metrics.metric_methodology.native_scores_available, false);
 assert.strictEqual(metrics.metric_methodology.raw_records_persisted, false);
 assert(!("day_strain" in metrics.today), "fabricated strain must not exist");

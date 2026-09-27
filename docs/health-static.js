@@ -393,24 +393,53 @@
   }
 
   function sleepScoreEstimate(day, targetHours, priorDays) {
-    // Inspired by Apple's published categories (duration/consistency/interruptions),
-    // with transparent app-specific curves. This is never an official vendor score.
-    const durationScore = clamp((day.asleep_hours / Math.max(0.1, targetHours)) * 100, 0, 100);
-    const interrupted = (day.awake_hours || 0) * 60 + (day.restless_minutes || 0);
-    const interruptionScore = clamp(100 - 200 * interrupted / Math.max(1, day.bed_minutes)
-      - Math.max(0, (day.awake_segments || 0) - 1) * 2, 0, 100);
-    const parts = [{ weight: 50, score: durationScore }, { weight: 20, score: interruptionScore }];
-    if (priorDays.length >= 7) {
+    // Transparent app-specific score. The displayed sleep-efficiency percentage
+    // remains an observation and is intentionally not used as a score input.
+    const target = Math.max(0.1, targetHours);
+    const deficitHours = Math.max(0, target - day.asleep_hours);
+    const excessHours = Math.max(0, day.asleep_hours - target);
+    const durationScore = clamp(100 - deficitHours * 18 - excessHours * 6, 0, 100);
+
+    const awakeMinutes = Math.max(0, (day.awake_hours || 0) * 60);
+    const restlessMinutes = Math.max(0, day.restless_minutes || 0);
+    const extraAwakenings = Math.max(0, (day.awake_segments || 0) - 1);
+    const latencyExcess = Math.max(0, (day.minutes_to_fall_asleep || 0) - 15);
+    const afterWakeExcess = Math.max(0, (day.minutes_after_wakeup || 0) - 10);
+    const continuityPenalty =
+      awakeMinutes * 0.65 +
+      restlessMinutes * 0.45 +
+      extraAwakenings * 4 +
+      latencyExcess * 0.6 +
+      afterWakeExcess * 0.4;
+    const continuityScore = clamp(100 - continuityPenalty, 0, 100);
+
+    const parts = [
+      { weight: 55, score: durationScore },
+      { weight: 30, score: continuityScore }
+    ];
+
+    if (priorDays.length >= 3) {
       const current = day.bedtime_minutes;
       const shifts = priorDays.slice(-13).map(previous => {
         const difference = Math.abs(current - previous.bedtime_minutes);
         return Math.min(difference, 1440 - difference);
       });
       const averageShift = shifts.reduce((sum, value) => sum + value, 0) / shifts.length;
-      parts.push({ weight: 30, score: clamp(100 - averageShift / 3, 0, 100) });
+      parts.push({ weight: 15, score: clamp(100 - averageShift * 0.6, 0, 100) });
     }
-    return Math.round(parts.reduce((sum, part) => sum + part.weight * part.score, 0)
-      / parts.reduce((sum, part) => sum + part.weight, 0));
+
+    let score = parts.reduce((sum, part) => sum + part.weight * part.score, 0)
+      / parts.reduce((sum, part) => sum + part.weight, 0) - 5;
+
+    // Acute caps prevent a clearly bad night from being masked by another strong component.
+    if (day.asleep_hours < 5) score = Math.min(score, 55);
+    else if (day.asleep_hours < 6) score = Math.min(score, 70);
+    if (awakeMinutes >= 45) score = Math.min(score, 75);
+    const disruptionMinutes = awakeMinutes + restlessMinutes;
+    if (disruptionMinutes >= 120) score = Math.min(score, 55);
+    else if (disruptionMinutes >= 90) score = Math.min(score, 65);
+
+    return Math.round(clamp(score, 0, 100));
   }
 
   function baseline(values) {
@@ -420,45 +449,101 @@
   }
 
   function readinessEstimate(day, priorDays) {
-    const components = [
-      { name: "sleep", weight: 0.60, score: day.sleep_score_estimate }
-    ];
-
     const hrvBase = baseline(priorDays.slice(-30).map(d => d.hrv_ms));
-    if (Number.isFinite(day.hrv_ms) && Number.isFinite(hrvBase) && hrvBase > 0) {
-      const hrvScore = clamp(80 + ((day.hrv_ms / hrvBase) - 1) * 100, 40, 100);
-      components.push({ name: "hrv", weight: 0.25, score: hrvScore });
-      day.hrv_baseline_ms = round(hrvBase, 1);
-    } else {
-      day.hrv_baseline_ms = null;
-    }
-
     const rhrBase = baseline(priorDays.slice(-30).map(d => d.resting_hr_bpm));
-    if (Number.isFinite(day.resting_hr_bpm) && Number.isFinite(rhrBase) && rhrBase > 0) {
-      const rhrScore = clamp(80 + ((rhrBase / day.resting_hr_bpm) - 1) * 100, 40, 100);
-      components.push({ name: "rhr", weight: 0.15, score: rhrScore });
-      day.resting_hr_baseline_bpm = round(rhrBase, 1);
-    } else {
-      day.resting_hr_baseline_bpm = null;
+    day.hrv_baseline_ms = Number.isFinite(hrvBase) ? round(hrvBase, 1) : null;
+    day.resting_hr_baseline_bpm = Number.isFinite(rhrBase) ? round(rhrBase, 1) : null;
+    if (!Number.isFinite(hrvBase) || !Number.isFinite(rhrBase) ||
+        !Number.isFinite(day.hrv_ms) || !Number.isFinite(day.resting_hr_bpm)) {
+      return { score: null, sourceLabel: "HRV·안정시 심박수 개인 기준선 부족" };
     }
 
-    if (components.length === 1) {
-      return { score: null, sourceLabel: "HRV·안정시 심박수 기준선 부족" };
+    const recent = [...priorDays.slice(-2), day];
+    const recentHrv = recent.map(d => d.hrv_ms).filter(Number.isFinite);
+    const recentRhr = recent.map(d => d.resting_hr_bpm).filter(Number.isFinite);
+    if (recentHrv.length < 2 || recentRhr.length < 2) {
+      return { score: null, sourceLabel: "최근 HRV·안정시 심박수 자료 부족" };
     }
-
-    const weightSum = components.reduce((sum, item) => sum + item.weight, 0);
-    const score = Math.round(
-      components.reduce((sum, item) => sum + item.score * item.weight, 0) / weightSum
-    );
-    const names = components.map(item => item.name);
-    const sourceLabel =
-      names.includes("hrv") && names.includes("rhr") ? "수면 + HRV + 안정시 심박수" :
-      names.includes("hrv") ? "수면 + HRV" :
-      names.includes("rhr") ? "수면 + 안정시 심박수" :
-      "수면만 (HRV/RHR 기준선 부족)";
-
-    return { score, sourceLabel };
+    const meanHrv3 = recentHrv.reduce((a, b) => a + b, 0) / recentHrv.length;
+    const meanRhr3 = recentRhr.reduce((a, b) => a + b, 0) / recentRhr.length;
+    const recentSleep = [...priorDays.slice(-6), day].map(d => d.asleep_hours).filter(Number.isFinite);
+    const meanSleep7 = recentSleep.reduce((a, b) => a + b, 0) / recentSleep.length;
+    const base = 72 + 3 * (meanSleep7 - 7.5);
+    const acuteHrvStress = 230 * Math.max(0, 1 - day.hrv_ms / hrvBase);
+    const persistentStress = 230 * Math.max(0, 1 - meanHrv3 / hrvBase)
+      + 6 * Math.max(0, meanRhr3 - rhrBase);
+    const heartRateStress = 5 * Math.max(0, day.resting_hr_bpm - rhrBase);
+    const stress = Math.min(50, Math.max(acuteHrvStress, persistentStress) + heartRateStress);
+    const score = Math.round(clamp(base - stress, 0, 100));
+    day.hrv_3d_ms = round(meanHrv3, 1);
+    day.resting_hr_3d_bpm = round(meanRhr3, 1);
+    return {
+      score,
+      sourceLabel: "최근 7일 수면 + 당일·3일 HRV + 3일 안정시 심박 개인 보정 추정"
+    };
   }
+
+  function buildLocalAdvice(day, targetHours) {
+    const notes = [];
+    const score = Number.isFinite(day.condition_score) ? day.condition_score : null;
+
+    if (score !== null && score < 40) {
+      notes.push("오늘 컨디션 추정치가 낮습니다. 가능하면 고강도 운동이나 늦은 일정은 줄이고 회복 여유를 확보하세요.");
+    } else if (score !== null && score < 60) {
+      notes.push("오늘은 평소보다 보수적으로 일정을 잡고, 피로가 느껴지면 운동 강도와 야간 활동을 한 단계 낮춰 보세요.");
+    } else if (score !== null && score >= 80) {
+      notes.push("오늘 컨디션 추정치는 양호합니다. 평소 루틴을 유지하되 점수만으로 무리해서 활동량을 늘리지는 마세요.");
+    }
+
+    const deficit = Math.max(0, targetHours - (day.asleep_hours || 0));
+    if (deficit >= 1) {
+      notes.push(`지난 수면은 목표보다 ${toHm(deficit)} 부족했습니다. 오늘은 취침 기회를 조금 앞당겨 규칙적으로 회복하세요.`);
+    }
+
+    const disruption = Math.max(0, (day.awake_hours || 0) * 60) + Math.max(0, day.restless_minutes || 0);
+    if (disruption >= 60 || (day.awake_segments || 0) >= 5) {
+      notes.push("수면 중 깨어 있거나 뒤척인 부담이 컸습니다. 취침 전 1시간은 밝은 화면·과도한 자극을 줄이고 비슷한 시간에 잠자리에 드는 편이 좋습니다.");
+    }
+
+    if (Number.isFinite(day.hrv_ms) && Number.isFinite(day.hrv_baseline_ms) && day.hrv_baseline_ms > 0) {
+      const deltaPct = (day.hrv_ms / day.hrv_baseline_ms - 1) * 100;
+      if (deltaPct <= -10) notes.push(`HRV가 개인 기준보다 약 ${Math.abs(Math.round(deltaPct))}% 낮습니다. 오늘은 회복을 우선하고 강도 높은 활동은 몸 상태를 보며 조절하세요.`);
+    }
+    if (Number.isFinite(day.hrv_3d_ms) && Number.isFinite(day.hrv_baseline_ms) &&
+        day.hrv_3d_ms <= day.hrv_baseline_ms * 0.9 && notes.length < 3) {
+      notes.push("오늘 HRV가 회복됐더라도 최근 3일 평균은 개인 기준보다 낮습니다. 며칠간의 피로 흐름을 보고 활동량을 조절하세요.");
+    }
+    if (Number.isFinite(day.resting_hr_bpm) && Number.isFinite(day.resting_hr_baseline_bpm)) {
+      const delta = day.resting_hr_bpm - day.resting_hr_baseline_bpm;
+      if (delta >= 5) notes.push(`안정시 심박이 개인 기준보다 약 ${Math.round(delta)} bpm 높습니다. 수분·휴식·수면을 우선하고 무리한 일정은 피하세요.`);
+    }
+    if (!notes.length) notes.push("뚜렷한 경고 신호는 잡히지 않았습니다. 수면시간과 취침·기상 리듬을 유지하면서 실제 피로감도 함께 확인하세요.");
+
+    return `로컬 규칙 기반 조언 · 외부 전송 없음 · 생성형 AI 아님. ${notes.slice(0, 3).join(" ")} 의료 진단이 아닌 생활 참고용입니다.`;
+  }
+
+  function recalculateDashboardScores(data) {
+    const history = data?.all_history;
+    if (!data?.today || !Array.isArray(history) || !history.length ||
+        history.some(day => !Number.isFinite(day.asleep_hours) ||
+          !Number.isFinite(day.bed_minutes) || !Number.isFinite(day.bedtime_minutes))) return false;
+    const targetHours = data.today.target_sleep_hours || 8;
+    history.forEach((day, index) => {
+      day.sleep_score_estimate = sleepScoreEstimate(day, targetHours, history.slice(0, index));
+      const readiness = readinessEstimate(day, history.slice(0, index));
+      day.condition_score = readiness.score;
+      day.readiness_source = readiness.sourceLabel;
+    });
+    const latest = history[history.length - 1];
+    for (const key of ["sleep_score_estimate", "condition_score", "readiness_source",
+      "hrv_baseline_ms", "resting_hr_baseline_bpm", "hrv_3d_ms", "resting_hr_3d_bpm"]) {
+      data.today[key] = latest[key] ?? null;
+    }
+    data.local_advice = buildLocalAdvice(latest, targetHours);
+    data.today.local_advice = data.local_advice;
+    return true;
+  }
+
 
   function calculateMetrics(
     sleepPoints,
@@ -624,8 +709,10 @@
       readiness_source: session.readiness_source,
       hrv_ms: session.hrv_ms,
       hrv_baseline_ms: session.hrv_baseline_ms,
+      hrv_3d_ms: session.hrv_3d_ms,
       resting_hr_bpm: session.resting_hr_bpm,
       resting_hr_baseline_bpm: session.resting_hr_baseline_bpm,
+      resting_hr_3d_bpm: session.resting_hr_3d_bpm,
       device: session.device
     }));
 
@@ -655,8 +742,10 @@
         readiness_source: latest.readiness_source,
         hrv_ms: latest.hrv_ms,
         hrv_baseline_ms: latest.hrv_baseline_ms,
+        hrv_3d_ms: latest.hrv_3d_ms,
         resting_hr_bpm: latest.resting_hr_bpm,
         resting_hr_baseline_bpm: latest.resting_hr_baseline_bpm,
+        resting_hr_3d_bpm: latest.resting_hr_3d_bpm,
         deep_hm: latest.deep_hm,
         deep_hours: latest.deep_hours,
         deep_pct: latest.deep_pct,
@@ -677,7 +766,8 @@
         stage_data_warning: latest.stage_data_warning,
         device_name: latest.device,
         hypnogram: latest.hypnogram,
-        metric_notice: "수면·컨디션 점수는 Google/Fitbit 공식 점수가 아니라 MySleepCoach의 투명한 추정치입니다."
+        metric_notice: "수면·컨디션 점수는 Google/Fitbit 공식 점수가 아니라 MySleepCoach의 투명한 추정치입니다. 수면 효율은 점수와 별도로 표시합니다.",
+        local_advice: buildLocalAdvice(latest, targetHours)
       },
       circadian_windows: circadianWindows,
       chronotype,
@@ -694,19 +784,21 @@
         active_minutes: null
       },
       metric_methodology: {
-        sleep_score: "MySleepCoach 추정치: 수면시간 50, 취침시각 규칙성 30(이전 7일 이상), 깨어남·뒤척임 20 가중. 이전 기록이 부족하면 사용 가능한 항목만 재가중합니다. Apple의 공개 평가 범주와 비중을 참고했고 세부 점수 곡선은 앱 자체 규칙입니다. Google/Fitbit/Apple 공식 점수가 아닙니다.",
-        sleep_efficiency: "API 반환값 summary.minutesAsleep / summary.minutesInSleepPeriod로 앱이 계산한 비율입니다. Google 공식 수면 효율과 같다고 보장하지 않습니다.",
-        google_sleep_score: "Google Health 공식 수면점수에는 수면시간, 안정된 잠까지 걸린 시간, 잠의 안정성, 뒤척임과 각성 등이 반영됩니다. 공개되지 않은 가중치는 임의로 만들지 않았습니다.",
-        readiness_score: "MySleepCoach 추정치: 수면 점수 60%, 이전 최대 30일의 HRV 기준선 대비 25%, 안정시 심박수 기준선 대비 15%. 생체지표별 이전 기록이 최소 7일 있어야 사용하며, 사용 가능한 항목만 재가중합니다. Google 공식 Readiness 점수가 아닙니다.",
+        sleep_score: "MySleepCoach 개인 보정 추정치. 수면시간 55%, 수면 연속성(깨어 있음·뒤척임·각성 횟수·입면 지연) 30%, 취침시각 규칙성 15%에서 개인 보정 5점을 뺍니다. 5시간 미만은 최대 55점, 6시간 미만은 최대 70점, 깨어 있음 45분 이상은 최대 75점입니다. 표시되는 수면 효율은 점수 입력으로 사용하지 않습니다. Google/Fitbit/Apple 공식 점수가 아닙니다.",
+        sleep_efficiency: "관찰값: Google Health sleep.summary.minutesAsleep / sleep.summary.minutesInSleepPeriod × 100으로 별도 계산·표시합니다. 이 비율을 수면 점수에 맞추거나 보정하지 않습니다.",
+        google_sleep_score: "Google/Fitbit 공식 Sleep Score의 세부 가중치는 공개되지 않았습니다. MySleepCoach 수면 점수는 별도 계산한 참고용 추정치입니다.",
+        readiness_score: "개인 보정 추정치. 최근 7일 평균 수면으로 기본값을 정하고, 당일 및 최근 3일 HRV 하락과 최근 3일 안정시 심박 상승을 최대 30일 개인 기준선과 비교해 감점합니다. 14일 공식 점수와 같은 날짜 앱 입력을 대조해 조정했지만 향후 정확도를 보장하거나 Google 공식 계산식을 복제하지 않습니다.",
         sleep_debt: "추정치: 최근 최대 14일의 목표 수면 대비 부족분을 지수 가중 평균합니다.",
+        calibration_note: "2026-09-13~09-26에 제공된 공식 점수 14일치와 앱의 일별 HRV·안정시 심박·수면 요약을 같은 날짜로 짝지어 개인 보정했습니다. 이 기간 내 오차만 확인했으며 독립 날짜 검증 전입니다.",
         native_scores_available: false,
         raw_records_persisted: false
       },
       ai_briefing: null,
+      local_advice: buildLocalAdvice(latest, targetHours),
       static_mode: {
         gemini_available: false,
         kakao_available: false,
-        note: "브라우저 직접 동기화 모드입니다. 액세스 토큰과 원본 건강 기록은 저장하지 않습니다."
+        note: "브라우저 직접 동기화 모드입니다. 로컬 조언은 기기 안에서 규칙으로 계산하며 건강 데이터를 외부 AI로 보내지 않습니다."
       }
     };
   }
@@ -749,6 +841,7 @@
   window.MySleepCoachStatic = Object.freeze({
     sync,
     scoreSleep: sleepScoreEstimate,
+    recalculateDashboardScores,
     scopes: Object.freeze({
       sleep: SLEEP_SCOPE,
       activity: ACTIVITY_SCOPE,
@@ -758,6 +851,8 @@
       calculateMetrics,
       parseSleepSessions,
       sleepScoreEstimate,
+      readinessEstimate,
+      buildLocalAdvice,
       fetchAllDataPoints
     })
   });
